@@ -100,8 +100,8 @@ body {
 }
 
 .envelope {
-    width: 300px;
-    height: 210px;
+    width: 250px;
+    height: 175px;
     position: relative;
     cursor: pointer;
     transition: transform 0.3s ease;
@@ -125,9 +125,9 @@ body {
 .envelope-flap {
     width: 0;
     height: 0;
-    border-left: 150px solid transparent;
-    border-right: 150px solid transparent;
-    border-top: 105px solid #ffaac4;
+    border-left: 125px solid transparent;
+    border-right: 125px solid transparent;
+    border-top: 87.5px solid #ffaac4;
     position: absolute;
     top: 0;
     left: 0;
@@ -151,21 +151,22 @@ body {
 }
 
 .envelope-front-left {
-    border-left: 150px solid #ffe0e9;
-    border-top: 105px solid transparent;
-    border-bottom: 105px solid transparent;
+    border-left: 125px solid #ffe0e9;
+    border-top: 87.5px solid transparent;
+    border-bottom: 87.5px solid transparent;
     left: 0;
 }
 
 .envelope-front-right {
-    border-right: 150px solid #ffe0e9;
-    border-top: 105px solid transparent;
-    border-bottom: 105px solid transparent;
+    border-right: 125px solid #ffe0e9;
+    border-top: 87.5px solid transparent;
+    border-bottom: 87.5px solid transparent;
     right: 0;
 }
 
-/* Envelope Label/Seal */
+/* Envelope Label/Seal - hidden */
 .envelope-seal {
+    display: none;
     width: 60px;
     height: 60px;
     background: #ffffff;
