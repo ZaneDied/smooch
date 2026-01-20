@@ -45,17 +45,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function animate() {
+        // Calculate center once per frame for performance
         const envRect = envelope.getBoundingClientRect();
         const centerX = envRect.left + envRect.width / 2;
         const centerY = envRect.top + envRect.height / 2;
 
         units.forEach(unit => {
             if (isExploding && unit.isTargeted) {
-                // Explosion phase: move outward
                 unit.x += unit.vx;
                 unit.y += unit.vy;
-                unit.vy += 0.15; // gravity
-                unit.opacity -= 0.015;
+                unit.vy += 0.2; // slightly stronger gravity
+                unit.opacity -= 0.02; // faster fade
                 unit.el.style.opacity = unit.opacity;
 
                 if (unit.opacity <= 0) {
@@ -65,21 +65,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 const elapsed = Date.now() - unit.startTime;
 
                 if (elapsed > unit.pullDelay) {
-                    // Pulling phase: move towards envelope center with a spiral
                     const dx = centerX - unit.x;
                     const dy = centerY - unit.y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
 
-                    if (dist > 10) {
-                        // Dynamic pull: acceleration + slight spiral
+                    if (dist > 5) {
                         const angle = Math.atan2(dy, dx);
-                        const spiral = 0.5; // Strength of the spiral
+                        const spiral = 0.3; // Reduced spiral for more direct pull
 
-                        // Move closer
-                        unit.x += Math.cos(angle) * (dist * 0.15);
-                        unit.y += Math.sin(angle) * (dist * 0.15);
+                        // Snappier pull
+                        unit.x += Math.cos(angle) * (dist * 0.2);
+                        unit.y += Math.sin(angle) * (dist * 0.2);
 
-                        // Add spiral motion
                         unit.x += Math.cos(angle + Math.PI / 2) * (dist * spiral * 0.1);
                         unit.y += Math.sin(angle + Math.PI / 2) * (dist * spiral * 0.1);
                     } else {
@@ -88,7 +85,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         unit.isAtCenter = true;
                     }
                 } else {
-                    // Still in normal flow until delay is over
                     normalFlow(unit);
                 }
             } else {
@@ -146,18 +142,16 @@ document.addEventListener('DOMContentLoaded', () => {
             explosionTime = Date.now();
 
             units.forEach(u => {
-                // Only target about 50% of the units for the firework
-                u.isTargeted = Math.random() > 0.5;
+                // Only target 35% of the units to reduce lag
+                u.isTargeted = Math.random() < 0.35;
 
                 if (u.isTargeted) {
-                    // Add a random delay for each unit to make the pull look more organic/dynamic
-                    u.pullDelay = Math.random() * 500;
+                    u.pullDelay = Math.random() * 400;
                     u.startTime = Date.now();
-
                     u.el.classList.add('purple');
                 }
             });
-            console.log('Envelope clicked! Dynamic love pull initiated... 💜');
+            console.log('Envelope clicked! Optimized love pull initiated... 💜');
         }
     });
 
