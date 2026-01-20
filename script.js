@@ -48,9 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function animate() {
-        const rect = trigger.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
 
         units.forEach(unit => {
             if (isExploding && unit.isTargeted) {
@@ -172,9 +171,8 @@ document.addEventListener('DOMContentLoaded', () => {
             trigger.style.opacity = '0';
             trigger.style.pointerEvents = 'none';
 
-            const rect = trigger.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
 
             units.forEach(u => {
                 u.isTargeted = Math.random() < 0.4;
