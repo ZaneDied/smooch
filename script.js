@@ -259,7 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     // Start typing after zoom finishes
                                     setTimeout(() => {
                                         // Use the message from message.js
-                                        typeText(LETTER_MESSAGE, document.querySelector('.letter-content'), 50);
+                                        typeText(LETTER_MESSAGE, document.querySelector('.letter-content'), 100);
                                     }, 1500);
                                 });
 
@@ -320,6 +320,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (i < text.length) {
                 element.textContent += text.charAt(i);
                 i++;
+
+                // Auto-scroll to bottom
+                const parent = element.parentElement;
+                if (parent && parent.classList.contains('full-screen')) {
+                    parent.scrollTop = parent.scrollHeight;
+                }
+
                 setTimeout(type, speed);
             }
         }

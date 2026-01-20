@@ -459,11 +459,23 @@ body {
     justify-content: flex-start;
     align-items: flex-start;
 
+    /* Scrolling Logic */
+    overflow-y: auto;
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
+
     /* Notepad Lines */
     background-image: linear-gradient(#e1b1bc 1px, transparent 1px);
     background-size: 100% 1.4em;
     /* Matches the line-height of the text */
     background-attachment: local;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.letter.full-screen::-webkit-scrollbar {
+    display: none;
 }
 
 .letter-content {
