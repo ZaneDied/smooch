@@ -141,6 +141,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (allAtCenter && targetedUnits.length > 0) {
                 isExploding = true;
 
+                // Show envelope after 1.5s delay
+                setTimeout(() => {
+                    const envelopeWrapper = document.querySelector('.envelope-wrapper');
+                    if (envelopeWrapper) envelopeWrapper.classList.add('show');
+                }, 1500);
+
                 targetedUnits.forEach(u => {
                     const angle = Math.random() * Math.PI * 2;
                     const velocity = 5 + Math.random() * 15;
@@ -212,6 +218,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     window.addEventListener('resize', init);
+
+    // Envelope Interaction
+    const envelope = document.querySelector('.envelope');
+    const flap = document.querySelector('.envelope-flap');
+    if (envelope && flap) {
+        envelope.addEventListener('click', () => {
+            flap.style.transform = flap.style.transform === 'rotateX(180deg)' ? 'rotateX(0deg)' : 'rotateX(180deg)';
+        });
+    }
 
     init();
     animate();
