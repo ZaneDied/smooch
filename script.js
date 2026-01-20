@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     el: el,
                     baseX: (c * colWidth) - 100,
                     baseY: (r * rowHeight),
-                    speed: 1, // Uniform speed for organization
+                    speed: 0.5 + Math.random() * 1.5, // Restored random speed
                 };
                 units.push(unit);
             }
