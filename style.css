@@ -25,7 +25,6 @@ body {
     letter-spacing: 4px;
     opacity: 0;
     animation: fade-in 2s ease forwards, shine 3s linear infinite;
-    transition: opacity 1s ease;
 
     /* Shiny Text Effect */
     background: linear-gradient(to right,
@@ -43,9 +42,8 @@ body {
 }
 
 .sender-label.hidden {
-    opacity: 0 !important;
+    animation: fade-out 3s ease forwards !important;
     pointer-events: none;
-    transition: opacity 2s ease;
 }
 
 @keyframes shine {
@@ -104,6 +102,18 @@ body {
     100% {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes fade-out {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-10px);
     }
 }
 
