@@ -182,30 +182,32 @@ document.addEventListener('DOMContentLoaded', () => {
         requestAnimationFrame(animate);
     }
 
-    envelope.addEventListener('click', () => {
+    const trigger = document.querySelector('.question-trigger');
+
+    trigger.addEventListener('click', () => {
         if (!isBeingPulled) {
             isBeingPulled = true;
             blackHole.classList.add('active');
-            explosionTime = Date.now();
+            trigger.style.opacity = '0';
+            trigger.style.pointerEvents = 'none';
 
-            const envRect = envelope.getBoundingClientRect();
-            const centerX = envRect.left + envRect.width / 2;
-            const centerY = envRect.top + envRect.height / 2;
+            const rect = trigger.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
 
             units.forEach(u => {
-                u.isTargeted = Math.random() < 0.4; // More units targeted
+                u.isTargeted = Math.random() < 0.4;
 
                 if (u.isTargeted) {
                     u.el.classList.add('purple');
                     u.startTime = Date.now();
-                    u.pullDelay = Math.random() * 150; // Faster start
+                    u.pullDelay = Math.random() * 150;
 
                     const dx = u.x - centerX;
                     const dy = u.y - centerY;
                     u.orbitRadius = Math.sqrt(dx * dx + dy * dy);
                     u.orbitAngle = Math.atan2(dy, dx);
 
-                    // Faster rotation and collapse
                     u.orbitSpeed = -(0.15 + Math.random() * 0.2);
                     u.collapseSpeed = 0.06 + Math.random() * 0.08;
                     u.accel = 1.05 + Math.random() * 0.05;

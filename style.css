@@ -274,200 +274,39 @@ body {
     }
 }
 
-/* Envelope Container */
-.envelope-wrapper {
+/* Question Trigger */
+.question-trigger {
+    font-size: 48px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    cursor: pointer;
     position: relative;
     z-index: 10;
+    padding: 20px 40px;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), letter-spacing 0.3s ease;
+
+    /* Shiny Text Effect */
+    background: linear-gradient(to right,
+            #ff00ff 0%,
+            #ffffff 50%,
+            #ff00ff 100%);
+    background-size: 200% auto;
+    color: #000;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 3s linear infinite;
 }
 
-@keyframes envelope-entry {
-    0% {
-        transform: scale(0) rotate(-20deg);
-        opacity: 0;
-    }
-
-    100% {
-        transform: scale(1) rotate(0deg);
-        opacity: 1;
-    }
+.question-trigger:hover {
+    transform: scale(1.1);
+    letter-spacing: 8px;
 }
 
-.envelope {
-    width: 200px;
-    height: 140px;
-    position: relative;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-
-.envelope:hover {
-    transform: translateY(-10px) scale(1.05);
-}
-
-/* Envelope Back */
-.envelope-back {
-    width: 100%;
-    height: 100%;
-    background: #ffc9d9;
-    border-radius: 8px;
-    position: absolute;
-    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(0, 0, 0, 0.15);
-}
-
-/* Envelope Flap */
-.envelope-flap {
-    width: 0;
-    height: 0;
-    border-left: 100px solid transparent;
-    border-right: 100px solid transparent;
-    border-top: 70px solid #ffaac4;
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform-origin: top;
-    z-index: 3;
-    border-radius: 8px 8px 0 0;
-    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
-    transition: transform 0.6s ease;
-    filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.3));
-}
-
-/* Flap pattern overlay - removed for plain white look */
-
-/* Envelope Front Flaps (bottom triangles) */
-.envelope-front-left,
-.envelope-front-right {
-    width: 0;
-    height: 0;
-    position: absolute;
-    top: 0;
-    z-index: 2;
-}
-
-.envelope-front-left {
-    border-left: 100px solid #ffe0e9;
-    border-top: 70px solid transparent;
-    border-bottom: 70px solid transparent;
-    left: 0;
-    filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.25));
-}
-
-.envelope-front-right {
-    border-right: 100px solid #ffe0e9;
-    border-top: 70px solid transparent;
-    border-bottom: 70px solid transparent;
-    right: 0;
-    filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.25));
-}
-
-/* Wax Seal Stamp */
-.ribbon-stamp {
-    position: absolute;
-    width: 45px;
-    height: 45px;
-    background: radial-gradient(circle at 30% 30%, #ff9aad, #ff6b88);
-    border-radius: 50%;
-    top: 48px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 4;
-    box-shadow:
-        0 4px 15px rgba(255, 107, 136, 0.4),
-        inset 0 -2px 8px rgba(0, 0, 0, 0.15),
-        inset 0 2px 5px rgba(255, 255, 255, 0.4);
-    border: 3px solid #ff528c;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-}
-
-/* Wax drips around seal */
-.ribbon-stamp::before {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: transparent;
-    box-shadow:
-        0 0 0 3px rgba(255, 107, 136, 0.25),
-        0 0 0 6px rgba(255, 107, 136, 0.12);
-}
-
-/* Embossed pattern in center */
-.ribbon-stamp::after {
-    content: '♥';
-    position: absolute;
-    font-size: 16px;
-    color: rgba(255, 82, 140, 0.6);
-    text-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.5),
-        0 -1px 0 rgba(0, 0, 0, 0.3);
-    font-weight: bold;
-}
-
-/* Envelope Label/Seal - hidden */
-.envelope-seal {
-    display: none;
-    width: 60px;
-    height: 60px;
-    background: #ffffff;
-    border-radius: 50%;
-    position: absolute;
-    top: 75px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 4;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
-}
-
-/* Floating particles */
-.particle {
-    display: none;
-}
-
-.particle:nth-child(1) {
-    top: 20%;
-    left: 15%;
-    animation-delay: 0s;
-}
-
-.particle:nth-child(2) {
-    top: 40%;
-    left: 85%;
-    animation-delay: 1s;
-}
-
-.particle:nth-child(3) {
-    top: 60%;
-    left: 10%;
-    animation-delay: 2s;
-}
-
-.particle:nth-child(4) {
-    top: 80%;
-    left: 90%;
-    animation-delay: 1.5s;
-}
-
-@keyframes particle-float {
-
-    0%,
-    100% {
-        transform: translateY(0) scale(1);
-        opacity: 0.6;
-    }
-
-    50% {
-        transform: translateY(-20px) scale(1.5);
-        opacity: 1;
-    }
+.question-trigger:active {
+    transform: scale(0.95);
 }
 
 /* Glow effect removed for minimal look */
