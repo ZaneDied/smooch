@@ -3,16 +3,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const phrase = "I LOVE YOU";
     const units = [];
     const mouse = { x: -1000, y: -1000 };
-    const avoidanceRadius = 150;
-    const avoidanceStrength = 50;
+    const avoidanceRadius = 200; // Larger radius for more gradual start
+    const avoidanceStrength = 60;
 
     function init() {
         if (!container) return;
         container.innerHTML = '';
         units.length = 0;
 
-        const rowHeight = 50; // Increased spacing slightly
-        const colWidth = 200;
+        const rowHeight = 25; // Much denser rows
+        const colWidth = 100; // Much denser columns
         const rows = Math.ceil(window.innerHeight / rowHeight) + 1;
         const cols = Math.ceil(window.innerWidth / colWidth) + 2;
 
@@ -26,9 +26,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const unit = {
                     el: el,
-                    baseX: (c * colWidth) - 100,
+                    baseX: (c * colWidth) - 50,
                     baseY: (r * rowHeight),
-                    speed: 0.5 + Math.random() * 1.5, // Restored random speed
+                    speed: 0.3 + Math.random() * 0.7, // Slower for the dense look
                 };
                 units.push(unit);
             }
@@ -41,12 +41,12 @@ document.addEventListener('DOMContentLoaded', () => {
             unit.baseX += unit.speed;
 
             // Wrap around
-            if (unit.baseX > window.innerWidth + 100) {
-                unit.baseX = -150;
+            if (unit.baseX > window.innerWidth + 50) {
+                unit.baseX = -100;
             }
 
             // Calculate avoidance
-            const dx = unit.baseX + 50 - mouse.x; // +50 to center the effect roughly
+            const dx = unit.baseX + 30 - mouse.x;
             const dy = unit.baseY - mouse.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
 
@@ -54,7 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
             let ty = 0;
 
             if (dist < avoidanceRadius) {
-                const force = (avoidanceRadius - dist) / avoidanceRadius;
+                // Using a smoother power-based falloff for "gradual" feel
+                const force = Math.pow((avoidanceRadius - dist) / avoidanceRadius, 1.5);
                 tx = (dx / dist) * force * avoidanceStrength;
                 ty = (dy / dist) * force * avoidanceStrength;
             }
