@@ -139,7 +139,14 @@ body {
     font-size: 14px;
     pointer-events: none;
     user-select: none;
-    will-change: transform;
+    will-change: transform, opacity, color;
+    transition: color 0.5s ease;
+}
+
+.love-unit.purple {
+    color: rgba(160, 32, 240, 0.8);
+    /* Vibrant purple */
+    text-shadow: 0 0 8px rgba(160, 32, 240, 0.5);
 }
 
 /* Floating hearts background */
