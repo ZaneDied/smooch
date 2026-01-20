@@ -258,7 +258,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                                     // Start typing after zoom finishes
                                     setTimeout(() => {
-                                        typeText("Dear, Gigi.", document.querySelector('.letter-content'));
+                                        // Use the message from message.js
+                                        typeText(LETTER_MESSAGE, document.querySelector('.letter-content'), 50);
                                     }, 1500);
                                 });
 

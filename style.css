@@ -451,12 +451,19 @@ body {
     border-radius: 0;
     z-index: 1000;
     box-shadow: none;
-    padding: 40px;
+    padding: 80px 40px;
+    /* More top padding for notepad look */
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
+
+    /* Notepad Lines */
+    background-image: linear-gradient(#e1b1bc 1px, transparent 1px);
+    background-size: 100% 1.4em;
+    /* Matches the line-height of the text */
+    background-attachment: local;
 }
 
 .letter-content {
