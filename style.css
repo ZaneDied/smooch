@@ -408,296 +408,53 @@ body {
 /* Glow effect removed for minimal look */
 
 /* ============================================
-   RESPONSIVE DESIGN - MOBILE FIRST
+   RESPONSIVE DESIGN
    ============================================ */
 
-/* Tablets and smaller (landscape) */
-@media screen and (max-width: 1024px) {
-    .envelope {
-        width: 350px;
-        height: 245px;
-    }
-
-    .envelope-flap {
-        border-left: 175px solid transparent;
-        border-right: 175px solid transparent;
-        border-top: 122.5px solid #e17055;
-    }
-
-    .envelope-flap::before {
-        top: -105px;
-        left: -166px;
-        width: 332px;
-        height: 105px;
-    }
-
-    .envelope-front-left {
-        border-left: 175px solid #fab1a0;
-        border-top: 122.5px solid transparent;
-        border-bottom: 122.5px solid transparent;
-    }
-
-    .envelope-front-right {
-        border-right: 175px solid #fab1a0;
-        border-top: 122.5px solid transparent;
-        border-bottom: 122.5px solid transparent;
-    }
-
-    .envelope-seal {
-        width: 70px;
-        height: 70px;
-        top: 87.5px;
-        font-size: 32px;
-    }
-}
-
-/* Large phones (landscape) and small tablets (portrait) */
 @media screen and (max-width: 768px) {
+    .sender-label {
+        font-size: 12vw;
+        /* Scales with screen width */
+        margin-bottom: 60px;
+        letter-spacing: 2px;
+    }
+
     .envelope {
-        width: 300px;
-        height: 210px;
+        transform: scale(0.8);
+        /* "Zoom out" effect for the envelope */
     }
 
-    .envelope-flap {
-        border-left: 150px solid transparent;
-        border-right: 150px solid transparent;
-        border-top: 105px solid #e17055;
-    }
-
-    .envelope-flap::before {
-        top: -90px;
-        left: -142px;
-        width: 284px;
-        height: 90px;
-        background-size: 25px 25px;
-    }
-
-    .envelope-front-left {
-        border-left: 150px solid #fab1a0;
-        border-top: 105px solid transparent;
-        border-bottom: 105px solid transparent;
-    }
-
-    .envelope-front-right {
-        border-right: 150px solid #fab1a0;
-        border-top: 105px solid transparent;
-        border-bottom: 105px solid transparent;
-    }
-
-    .envelope-seal {
-        width: 60px;
-        height: 60px;
-        top: 75px;
-        font-size: 28px;
-    }
-
-    .envelope:hover {
-        transform: translateY(-8px) scale(1.03);
+    .interaction-hint {
+        bottom: 20px;
+        font-size: 12px;
     }
 }
 
-/* Standard phones (portrait) */
 @media screen and (max-width: 480px) {
-    body {
-        padding: 20px;
+    .sender-label {
+        font-size: 14vw;
+        margin-bottom: 40px;
     }
 
     .envelope {
-        width: 280px;
-        height: 196px;
-    }
-
-    .envelope-flap {
-        border-left: 140px solid transparent;
-        border-right: 140px solid transparent;
-        border-top: 98px solid #e17055;
-    }
-
-    .envelope-flap::before {
-        top: -84px;
-        left: -133px;
-        width: 266px;
-        height: 84px;
-        background-size: 20px 20px;
-    }
-
-    .envelope-front-left {
-        border-left: 140px solid #fab1a0;
-        border-top: 98px solid transparent;
-        border-bottom: 98px solid transparent;
-    }
-
-    .envelope-front-right {
-        border-right: 140px solid #fab1a0;
-        border-top: 98px solid transparent;
-        border-bottom: 98px solid transparent;
-    }
-
-    .envelope-seal {
-        width: 55px;
-        height: 55px;
-        top: 70px;
-        font-size: 26px;
-    }
-
-    /* Reduce heart sizes for mobile */
-    .heart {
-        font-size: 16px;
-    }
-
-    .heart:nth-child(2) {
-        font-size: 20px;
-    }
-
-    .heart:nth-child(4) {
-        font-size: 18px;
-    }
-
-    /* Optimize hover for touch devices */
-    .envelope:hover {
-        transform: translateY(-5px) scale(1.02);
-    }
-
-    /* Adjust glow for mobile */
-    .envelope-wrapper::before {
-        top: -15px;
-        left: -15px;
-        right: -15px;
-        bottom: -15px;
-    }
-}
-
-/* Small phones */
-@media screen and (max-width: 375px) {
-    .envelope {
-        width: 240px;
-        height: 168px;
-    }
-
-    .envelope-flap {
-        border-left: 120px solid transparent;
-        border-right: 120px solid transparent;
-        border-top: 84px solid #e17055;
-    }
-
-    .envelope-flap::before {
-        top: -72px;
-        left: -114px;
-        width: 228px;
-        height: 72px;
-        background-size: 18px 18px;
-    }
-
-    .envelope-front-left {
-        border-left: 120px solid #fab1a0;
-        border-top: 84px solid transparent;
-        border-bottom: 84px solid transparent;
-    }
-
-    .envelope-front-right {
-        border-right: 120px solid #fab1a0;
-        border-top: 84px solid transparent;
-        border-bottom: 84px solid transparent;
-    }
-
-    .envelope-seal {
-        width: 50px;
-        height: 50px;
-        top: 60px;
-        font-size: 24px;
-    }
-
-    /* Further reduce particles for very small screens */
-    .particle {
-        width: 3px;
-        height: 3px;
-    }
-}
-
-/* Extra small phones */
-@media screen and (max-width: 320px) {
-    .envelope {
-        width: 220px;
-        height: 154px;
-    }
-
-    .envelope-flap {
-        border-left: 110px solid transparent;
-        border-right: 110px solid transparent;
-        border-top: 77px solid #e17055;
-    }
-
-    .envelope-flap::before {
-        top: -66px;
-        left: -104px;
-        width: 208px;
-        height: 66px;
-        background-size: 16px 16px;
-    }
-
-    .envelope-front-left {
-        border-left: 110px solid #fab1a0;
-        border-top: 77px solid transparent;
-        border-bottom: 77px solid transparent;
-    }
-
-    .envelope-front-right {
-        border-right: 110px solid #fab1a0;
-        border-top: 77px solid transparent;
-        border-bottom: 77px solid transparent;
-    }
-
-    .envelope-seal {
-        width: 45px;
-        height: 45px;
-        top: 55px;
-        font-size: 22px;
+        transform: scale(0.7);
     }
 }
 
 /* Landscape mode optimization for phones */
 @media screen and (max-height: 500px) and (orientation: landscape) {
+    .sender-label {
+        font-size: 40px;
+        margin-bottom: 20px;
+    }
+
     .envelope {
-        width: 260px;
-        height: 182px;
+        transform: scale(0.6);
     }
 
-    .envelope-flap {
-        border-left: 130px solid transparent;
-        border-right: 130px solid transparent;
-        border-top: 91px solid #e17055;
-    }
-
-    .envelope-flap::before {
-        top: -78px;
-        left: -123px;
-        width: 246px;
-        height: 78px;
-    }
-
-    .envelope-front-left {
-        border-left: 130px solid #fab1a0;
-        border-top: 91px solid transparent;
-        border-bottom: 91px solid transparent;
-    }
-
-    .envelope-front-right {
-        border-right: 130px solid #fab1a0;
-        border-top: 91px solid transparent;
-        border-bottom: 91px solid transparent;
-    }
-
-    .envelope-seal {
-        width: 52px;
-        height: 52px;
-        top: 65px;
-        font-size: 24px;
-    }
-
-    /* Hide some floating hearts in landscape to reduce clutter */
-    .heart:nth-child(3),
-    .heart:nth-child(6) {
+    .interaction-hint {
         display: none;
+        /* Hide hint in landscape to save space */
     }
 }
 
