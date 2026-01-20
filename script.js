@@ -136,14 +136,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // Check if targeted units are pulled in to trigger explosion
         if (isBeingPulled && !isExploding) {
             const targetedUnits = units.filter(u => u.isTargeted);
-            // Wait longer for the collapse to feel "long"
-            const allAtCenter = targetedUnits.every(u => u.isAtCenter || (Date.now() - explosionTime > 5000));
+            // Strictly wait for ALL targeted units to be at center
+            const allAtCenter = targetedUnits.every(u => u.isAtCenter);
 
-            if (allAtCenter) {
+            if (allAtCenter && targetedUnits.length > 0) {
                 isExploding = true;
                 targetedUnits.forEach(u => {
                     const angle = Math.random() * Math.PI * 2;
-                    const velocity = 4 + Math.random() * 12; // Slower, more graceful explosion
+                    const velocity = 2 + Math.random() * 6; // Much slower, graceful explosion
                     u.vx = Math.cos(angle) * velocity;
                     u.vy = Math.sin(angle) * velocity;
                 });
@@ -168,26 +168,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (u.isTargeted) {
                     u.el.classList.add('purple');
                     u.startTime = Date.now();
-                    u.pullDelay = Math.random() * 800; // Spread out the start even more
+                    u.pullDelay = Math.random() * 300; // Shorter delay for faster start
 
-                    // Galaxy/Orbital properties
                     const dx = u.x - centerX;
                     const dy = u.y - centerY;
                     u.orbitRadius = Math.sqrt(dx * dx + dy * dy);
                     u.orbitAngle = Math.atan2(dy, dx);
 
-                    // ANTI-CLOCKWISE: Negative speed
-                    // Slower base orbital speeds for longer swirl
-                    u.orbitSpeed = -(0.02 + Math.random() * 0.08);
-
-                    // Slower collapse
-                    u.collapseSpeed = 0.005 + Math.random() * 0.015;
-
-                    // Slower acceleration
-                    u.accel = 1.002 + Math.random() * 0.01;
+                    // Faster collapse and orbit for "short phase"
+                    u.orbitSpeed = -(0.05 + Math.random() * 0.15);
+                    u.collapseSpeed = 0.03 + Math.random() * 0.05; // Faster collapse
+                    u.accel = 1.02 + Math.random() * 0.03; // Faster acceleration
                 }
             });
-            console.log('Dense Long-Collapse Galaxy initiated! 🌌💜');
+            console.log('Fast-Orbit Slow-Explosion Galaxy initiated! 🌌💜');
         }
     });
 
