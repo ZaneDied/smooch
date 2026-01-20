@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('love-stream-container');
-    const envelope = document.querySelector('.envelope');
     const phrase = "I LOVE YOU";
     const units = [];
     const mouse = { x: -1000, y: -1000 };
@@ -15,6 +14,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const blackHole = document.createElement('div');
     blackHole.className = 'black-hole';
     document.body.appendChild(blackHole);
+
+    const trigger = document.querySelector('.question-trigger');
+    const responseContainer = document.getElementById('response-buttons');
+    const yesBtn = document.querySelector('.yes-btn');
+    const noBtn = document.querySelector('.no-btn');
+
+    let noBtnX = 0;
+    let noBtnY = 0;
 
     function init() {
         if (!container) return;
@@ -53,13 +60,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function animate() {
-        const envRect = envelope.getBoundingClientRect();
-        const centerX = envRect.left + envRect.width / 2;
-        const centerY = envRect.top + envRect.height / 2;
+        const rect = trigger.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
 
         // Update black hole position
         blackHole.style.left = `${centerX}px`;
         blackHole.style.top = `${centerY}px`;
+
+        // No Button Evasion
+        const noRect = noBtn.getBoundingClientRect();
+        const noCenterX = noRect.left + noRect.width / 2;
+        const noCenterY = noRect.top + noRect.height / 2;
+        const distToNo = Math.sqrt(Math.pow(mouse.x - noCenterX, 2) + Math.pow(mouse.y - noCenterY, 2));
+
+        if (distToNo < 100) {
+            const angle = Math.atan2(noCenterY - mouse.y, noCenterX - mouse.x);
+            noBtnX += Math.cos(angle) * 15;
+            noBtnY += Math.sin(angle) * 15;
+
+            // Keep in bounds
+            const padding = 50;
+            if (noRect.left + noBtnX < padding) noBtnX += 20;
+            if (noRect.right + noBtnX > window.innerWidth - padding) noBtnX -= 20;
+            if (noRect.top + noBtnY < padding) noBtnY += 20;
+            if (noRect.bottom + noBtnY > window.innerHeight - padding) noBtnY -= 20;
+
+            noBtn.style.transform = `translate(${noBtnX}px, ${noBtnY}px)`;
+        }
 
         units.forEach(unit => {
             if (isExploding && unit.isTargeted) {
@@ -157,6 +185,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 isExploding = true;
                 blackHole.style.opacity = '0'; // Hide black hole on explosion
 
+                // Show buttons after a short delay
+                setTimeout(() => {
+                    responseContainer.classList.add('visible');
+                }, 1000);
+
                 targetedUnits.forEach(u => {
                     const angle = Math.random() * Math.PI * 2;
                     const velocity = 5 + Math.random() * 15;
@@ -181,8 +214,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         requestAnimationFrame(animate);
     }
-
-    const trigger = document.querySelector('.question-trigger');
 
     trigger.addEventListener('click', () => {
         if (!isBeingPulled) {
@@ -214,6 +245,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         }
+    });
+
+    yesBtn.addEventListener('click', () => {
+        responseContainer.innerHTML = '<h1 style="color: white; font-size: 60px; text-shadow: 0 0 20px #ff00ff;">YAY! I LOVE YOU TOO! ❤️</h1>';
+        // Trigger massive explosion of all units
+        units.forEach(u => {
+            u.isTargeted = true;
+            u.isAtCenter = true;
+        });
+        isBeingPulled = true;
+        isExploding = false; // Reset to trigger new explosion
     });
 
     window.addEventListener('mousemove', (e) => {
