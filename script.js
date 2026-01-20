@@ -68,11 +68,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // 3D Depth Logic
                 if (unit.vz) {
-                    unit.z += unit.vz * 0.1; // Fly towards camera
-                    unit.scale = unit.z;
-                    // Add blur as it gets very close to "camera"
-                    const blur = Math.max(0, (unit.z - 5) * 2);
+                    unit.z += unit.vz * 0.1;
+                    unit.scale = Math.min(unit.z, 20); // Cap scale to prevent screen takeover
+
+                    // Add blur as it gets close, but cap it
+                    const blur = Math.min(Math.max(0, (unit.z - 5) * 2), 10);
                     unit.el.style.filter = blur > 0 ? `blur(${blur}px)` : 'none';
+
+                    // Fade out faster as it hits the "camera"
+                    if (unit.z > 10) unit.opacity -= 0.02;
                 }
 
                 unit.vy += 0.05; // Very light gravity
@@ -161,9 +165,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     u.vx = Math.cos(angle) * velocity;
                     u.vy = Math.sin(angle) * velocity;
 
-                    // 3D "To Camera" Effect
-                    u.vz = 1 + Math.random() * 5; // Velocity towards camera
-                    u.z = 1; // Initial scale/z-depth
+                    // 3D "To Camera" Effect - Only for 1/3 of the units
+                    if (Math.random() < 0.33) {
+                        u.vz = 1 + Math.random() * 3; // Slightly slower camera velocity
+                        u.z = 1;
+                    } else {
+                        u.vz = 0;
+                        u.scale = 0.5 + Math.random() * 1.5;
+                    }
 
                     u.opacity = 1;
                     u.el.style.opacity = 1;
