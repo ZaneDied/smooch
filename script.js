@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
         container.innerHTML = '';
         units.length = 0;
 
-        const rowHeight = 25;
-        const colWidth = 100;
+        const rowHeight = 18; // Denser rows
+        const colWidth = 70;  // Denser columns
         const rows = Math.ceil(window.innerHeight / rowHeight) + 1;
         const cols = Math.ceil(window.innerWidth / colWidth) + 2;
 
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     baseY: (r * rowHeight),
                     x: (c * colWidth) - 50,
                     y: (r * rowHeight),
-                    speed: 0.3 + Math.random() * 0.7,
+                    speed: 0.2 + Math.random() * 0.5, // Slower base flow for density
                     vx: 0,
                     vy: 0,
                     opacity: 1
@@ -54,8 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isExploding && unit.isTargeted) {
                 unit.x += unit.vx;
                 unit.y += unit.vy;
-                unit.vy += 0.2; // slightly stronger gravity
-                unit.opacity -= 0.015; // faster fade
+                unit.vy += 0.1; // Lighter gravity for slower fall
+                unit.opacity -= 0.008; // Much slower fade
                 unit.el.style.opacity = unit.opacity;
 
                 if (unit.opacity <= 0) {
@@ -72,9 +72,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         // 2. Shrink radius (collapse) with a bit of organic "wobble"
                         const wobble = Math.sin(Date.now() * 0.01 + unit.pullDelay) * 0.5;
+                        // Slower collapse speed for "long collapse"
                         unit.orbitRadius *= (1 - unit.collapseSpeed);
 
                         // 3. Speed up rotation uniquely for each unit
+                        // Slower acceleration
                         unit.orbitSpeed *= unit.accel;
 
                         // 4. Update position
@@ -122,13 +124,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // Check if targeted units are pulled in to trigger explosion
         if (isBeingPulled && !isExploding) {
             const targetedUnits = units.filter(u => u.isTargeted);
-            const allAtCenter = targetedUnits.every(u => u.isAtCenter || (Date.now() - explosionTime > 3000));
+            // Wait longer for the collapse to feel "long"
+            const allAtCenter = targetedUnits.every(u => u.isAtCenter || (Date.now() - explosionTime > 5000));
 
             if (allAtCenter) {
                 isExploding = true;
                 targetedUnits.forEach(u => {
                     const angle = Math.random() * Math.PI * 2;
-                    const velocity = 8 + Math.random() * 20; // More explosive
+                    const velocity = 4 + Math.random() * 12; // Slower, more graceful explosion
                     u.vx = Math.cos(angle) * velocity;
                     u.vy = Math.sin(angle) * velocity;
                 });
@@ -153,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (u.isTargeted) {
                     u.el.classList.add('purple');
                     u.startTime = Date.now();
-                    u.pullDelay = Math.random() * 400; // More spread out
+                    u.pullDelay = Math.random() * 800; // Spread out the start even more
 
                     // Galaxy/Orbital properties
                     const dx = u.x - centerX;
@@ -162,17 +165,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     u.orbitAngle = Math.atan2(dy, dx);
 
                     // ANTI-CLOCKWISE: Negative speed
-                    // More randomness in base speed
-                    u.orbitSpeed = -(0.03 + Math.random() * 0.15);
+                    // Slower base orbital speeds for longer swirl
+                    u.orbitSpeed = -(0.02 + Math.random() * 0.08);
 
-                    // More randomness in collapse speed
-                    u.collapseSpeed = 0.01 + Math.random() * 0.04;
+                    // Slower collapse
+                    u.collapseSpeed = 0.005 + Math.random() * 0.015;
 
-                    // Unique acceleration for each unit to break synchronicity
-                    u.accel = 1.005 + Math.random() * 0.02;
+                    // Slower acceleration
+                    u.accel = 1.002 + Math.random() * 0.01;
                 }
             });
-            console.log('Organic Anti-Clockwise Galaxy initiated! 🌌💜');
+            console.log('Dense Long-Collapse Galaxy initiated! 🌌💜');
         }
     });
 
