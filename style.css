@@ -45,6 +45,7 @@ body {
 .sender-label.hidden {
     opacity: 0 !important;
     pointer-events: none;
+    transition: opacity 2s ease;
 }
 
 @keyframes shine {
