@@ -413,18 +413,22 @@ body {
     position: absolute;
     width: 180px;
     height: 120px;
-    background: #ffffff;
+    background: #ffdae3;
+    /* Soft pinkish background */
     top: 10px;
     left: 10px;
     z-index: 1;
-    transition: transform 1.5s cubic-bezier(0.19, 1, 0.22, 1), opacity 1s ease;
+    transition:
+        transform 1.5s cubic-bezier(0.19, 1, 0.22, 1),
+        opacity 1s ease,
+        width 1.5s cubic-bezier(0.19, 1, 0.22, 1),
+        height 1.5s cubic-bezier(0.19, 1, 0.22, 1),
+        top 1.5s cubic-bezier(0.19, 1, 0.22, 1),
+        left 1.5s cubic-bezier(0.19, 1, 0.22, 1),
+        border-radius 1s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Outfit', sans-serif;
-    font-weight: 900;
-    font-size: 20px;
-    color: #ff00ff;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     border-radius: 4px;
     opacity: 0;
@@ -435,7 +439,18 @@ body {
     opacity: 1;
     transform: translateY(-120px);
     z-index: 5;
-    /* Bring to front when out */
+}
+
+.letter.full-screen {
+    position: fixed;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    transform: translateY(0) !important;
+    border-radius: 0;
+    z-index: 100;
+    /* Cover everything */
 }
 
 /* ============================================

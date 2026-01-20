@@ -235,14 +235,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Open flap
                 flap.style.transform = 'rotateX(180deg)';
 
-                // Wait 2 seconds then slide out letter
+                // Wait 1.3 seconds then slide out letter
                 setTimeout(() => {
-                    if (letter) letter.classList.add('out');
-                }, 2000);
+                    if (letter) {
+                        letter.classList.add('out');
+
+                        // After letter is out, zoom it in to become the new scene
+                        setTimeout(() => {
+                            letter.classList.add('full-screen');
+                        }, 1500); // Wait for slide animation to finish
+                    }
+                }, 1300);
             } else {
                 // Close flap and hide letter
                 flap.style.transform = 'rotateX(0deg)';
-                if (letter) letter.classList.remove('out');
+                if (letter) {
+                    letter.classList.remove('out');
+                    letter.classList.remove('full-screen');
+                }
             }
         });
     }
