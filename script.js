@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 unit.x += unit.vx;
                 unit.y += unit.vy;
                 unit.vy += 0.2; // slightly stronger gravity
-                unit.opacity -= 0.02; // faster fade
+                unit.opacity -= 0.015; // faster fade
                 unit.el.style.opacity = unit.opacity;
 
                 if (unit.opacity <= 0) {
@@ -65,21 +65,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 const elapsed = Date.now() - unit.startTime;
 
                 if (elapsed > unit.pullDelay) {
-                    const dx = centerX - unit.x;
-                    const dy = centerY - unit.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (unit.orbitRadius > 2) {
+                        // Galaxy Spiral Logic
+                        // 1. Rotate
+                        unit.orbitAngle += unit.orbitSpeed;
 
-                    if (dist > 5) {
-                        const angle = Math.atan2(dy, dx);
-                        const spiral = 0.3; // Reduced spiral for more direct pull
+                        // 2. Shrink radius (collapse)
+                        unit.orbitRadius *= (1 - unit.collapseSpeed);
 
-                        // Snappier pull
-                        unit.x += Math.cos(angle) * (dist * 0.2);
-                        unit.y += Math.sin(angle) * (dist * 0.2);
+                        // 3. Speed up rotation as it gets closer (conservation of angular momentum feel)
+                        unit.orbitSpeed *= 1.01;
 
-                        unit.x += Math.cos(angle + Math.PI / 2) * (dist * spiral * 0.1);
-                        unit.y += Math.sin(angle + Math.PI / 2) * (dist * spiral * 0.1);
+                        // 4. Update position
+                        unit.x = centerX + Math.cos(unit.orbitAngle) * unit.orbitRadius;
+                        unit.y = centerY + Math.sin(unit.orbitAngle) * unit.orbitRadius;
                     } else {
+                        // Collapse into the dense spot
                         unit.x = centerX;
                         unit.y = centerY;
                         unit.isAtCenter = true;
@@ -141,17 +142,28 @@ document.addEventListener('DOMContentLoaded', () => {
             isBeingPulled = true;
             explosionTime = Date.now();
 
+            const envRect = envelope.getBoundingClientRect();
+            const centerX = envRect.left + envRect.width / 2;
+            const centerY = envRect.top + envRect.height / 2;
+
             units.forEach(u => {
-                // Only target 35% of the units to reduce lag
                 u.isTargeted = Math.random() < 0.35;
 
                 if (u.isTargeted) {
-                    u.pullDelay = Math.random() * 400;
-                    u.startTime = Date.now();
                     u.el.classList.add('purple');
+                    u.startTime = Date.now();
+                    u.pullDelay = Math.random() * 300;
+
+                    // Galaxy/Orbital properties
+                    const dx = u.x - centerX;
+                    const dy = u.y - centerY;
+                    u.orbitRadius = Math.sqrt(dx * dx + dy * dy);
+                    u.orbitAngle = Math.atan2(dy, dx);
+                    u.orbitSpeed = (0.05 + Math.random() * 0.1) * (Math.random() > 0.5 ? 1 : -1);
+                    u.collapseSpeed = 0.02 + Math.random() * 0.03;
                 }
             });
-            console.log('Envelope clicked! Optimized love pull initiated... 💜');
+            console.log('Galaxy pull initiated! 🌌💜');
         }
     });
 
