@@ -1,45 +1,86 @@
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('love-stream-container');
-    const text = "I LOVE YOU ";
+    const phrase = "I LOVE YOU";
+    const units = [];
+    const mouse = { x: -1000, y: -1000 };
+    const avoidanceRadius = 150;
+    const avoidanceStrength = 50;
 
-    function createStream() {
+    function init() {
         container.innerHTML = '';
-        const rowHeight = 30; // height of each row in pixels
-        const rows = Math.ceil(window.innerHeight / rowHeight);
+        units.length = 0;
 
-        for (let i = 0; i < rows; i++) {
-            const row = document.createElement('div');
-            row.className = 'love-stream-row';
-            row.style.top = `${i * rowHeight}px`;
+        const rowHeight = 40;
+        const colWidth = 180;
+        const rows = Math.ceil(window.innerHeight / rowHeight) + 1;
+        const cols = Math.ceil(window.innerWidth / colWidth) + 2;
 
-            // Randomize speed and starting position for a "crazy" effect
-            const duration = 10 + Math.random() * 20; // between 10s and 30s
-            const delay = Math.random() * -20; // random start position
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                const el = document.createElement('span');
+                el.className = 'love-unit';
+                el.textContent = phrase;
+                container.appendChild(el);
 
-            row.style.animationDuration = `${duration}s`;
-            row.style.animationDelay = `${delay}s`;
-
-            // Alternate direction or just keep left-to-right as requested
-            // User specifically asked left to right.
-
-            // We need enough text to cover the screen twice to loop smoothly
-            // "I LOVE YOU " is about 120px at 24px font size.
-            // We'll repeat it enough times to be much wider than the screen.
-            const repeatCount = Math.ceil((window.innerWidth * 2) / 100) + 10;
-            row.textContent = text.repeat(repeatCount);
-
-            container.appendChild(row);
+                const unit = {
+                    el: el,
+                    baseX: c * colWidth,
+                    baseY: r * rowHeight,
+                    speed: 1 + Math.random() * 2,
+                    offset: Math.random() * 1000
+                };
+                units.push(unit);
+            }
         }
     }
 
-    createStream();
+    function animate() {
+        units.forEach(unit => {
+            // Move left to right
+            unit.baseX += unit.speed;
 
-    // Handle resize
-    let resizeTimer;
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(createStream, 250);
+            // Wrap around
+            if (unit.baseX > window.innerWidth + 100) {
+                unit.baseX = -150;
+            }
+
+            // Calculate avoidance
+            const dx = unit.baseX + 50 - mouse.x; // +50 to center the effect roughly
+            const dy = unit.baseY - mouse.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            let tx = 0;
+            let ty = 0;
+
+            if (dist < avoidanceRadius) {
+                const force = (avoidanceRadius - dist) / avoidanceRadius;
+                tx = (dx / dist) * force * avoidanceStrength;
+                ty = (dy / dist) * force * avoidanceStrength;
+            }
+
+            unit.el.style.transform = `translate(${unit.baseX + tx}px, ${unit.baseY + ty}px)`;
+        });
+
+        requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('mousemove', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
     });
 
-    console.log('Love stream initialized! ❤️');
+    // Touch support for mobile
+    window.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 0) {
+            mouse.x = e.touches[0].clientX;
+            mouse.y = e.touches[0].clientY;
+        }
+    });
+
+    window.addEventListener('resize', init);
+
+    init();
+    animate();
+
+    console.log('Interactive love stream initialized! 🖱️❤️');
 });

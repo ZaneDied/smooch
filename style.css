@@ -86,17 +86,14 @@ body {
     width: 100%;
     pointer-events: none;
     user-select: none;
-    animation: scroll-left-to-right linear infinite;
+    display: flex;
 }
 
-@keyframes scroll-left-to-right {
-    0% {
-        transform: translateX(-50%);
-    }
-
-    100% {
-        transform: translateX(0%);
-    }
+.love-unit {
+    display: inline-block;
+    margin-right: 40px;
+    transition: transform 0.2s ease-out;
+    will-change: transform;
 }
 
 /* Floating hearts background */
