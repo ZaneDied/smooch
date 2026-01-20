@@ -141,6 +141,8 @@ body {
     user-select: none;
     will-change: transform, opacity, color;
     transition: color 0.5s ease;
+    /* Center the text on its x,y coordinates */
+    transform: translate(-50%, -50%);
 }
 
 .love-unit.purple {

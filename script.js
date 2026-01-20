@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     unit.el.style.display = 'none';
                 }
 
-                unit.el.style.transform = `translate(${unit.x}px, ${unit.y}px) rotate(${unit.rotation}deg) scale(${unit.scale})`;
+                unit.el.style.transform = `translate(${unit.x}px, ${unit.y}px) translate(-50%, -50%) rotate(${unit.rotation}deg) scale(${unit.scale})`;
             } else if (isBeingPulled && unit.isTargeted) {
                 const elapsed = Date.now() - unit.startTime;
 
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         unit.scale = Math.max(0.1, 1 - (400 - unit.orbitRadius) / 600);
 
                         unit.el.style.opacity = Math.min(1, 0.2 + (1 - unit.orbitRadius / 800));
-                        unit.el.style.transform = `translate(${unit.x}px, ${unit.y}px) rotate(${unit.rotation}deg) scale(${unit.scale})`;
+                        unit.el.style.transform = `translate(${unit.x}px, ${unit.y}px) translate(-50%, -50%) rotate(${unit.rotation}deg) scale(${unit.scale})`;
                     } else {
                         unit.x = centerX + (Math.random() - 0.5) * 10;
                         unit.y = centerY + (Math.random() - 0.5) * 10;
@@ -102,11 +102,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 } else {
                     normalFlow(unit);
-                    unit.el.style.transform = `translate(${unit.x}px, ${unit.y}px) scale(${unit.scale})`;
+                    unit.el.style.transform = `translate(${unit.x}px, ${unit.y}px) translate(-50%, -50%) scale(${unit.scale})`;
                 }
             } else {
                 normalFlow(unit);
-                unit.el.style.transform = `translate(${unit.x}px, ${unit.y}px) scale(${unit.scale})`;
+                unit.el.style.transform = `translate(${unit.x}px, ${unit.y}px) translate(-50%, -50%) scale(${unit.scale})`;
             }
         });
 
