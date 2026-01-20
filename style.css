@@ -451,6 +451,57 @@ body {
     border-radius: 0;
     z-index: 1000;
     box-shadow: none;
+    padding: 40px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.letter-content {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    color: #ff4d6d;
+    line-height: 1.4;
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+    white-space: pre-wrap;
+    position: relative;
+}
+
+/* Blinking Cursor */
+.letter-content::after {
+    content: '|';
+    display: inline-block;
+    margin-left: 5px;
+    animation: blink 1s step-end infinite;
+    font-weight: 300;
+}
+
+@keyframes blink {
+
+    from,
+    to {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+/* Mobile adjustments for letter content */
+@media screen and (max-width: 768px) {
+    .letter-content {
+        font-size: 28px;
+        padding: 20px;
+    }
+
+    .letter.full-screen {
+        padding: 20px;
+    }
 }
 
 /* ============================================

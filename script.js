@@ -255,6 +255,11 @@ document.addEventListener('DOMContentLoaded', () => {
                                 // Trigger full-screen in next frame
                                 requestAnimationFrame(() => {
                                     letter.classList.add('full-screen');
+
+                                    // Start typing after zoom finishes
+                                    setTimeout(() => {
+                                        typeText("Dear, Gigi.", document.querySelector('.letter-content'));
+                                    }, 1500);
                                 });
 
                                 // Hide everything else for a clean new scene
@@ -277,6 +282,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (letter) {
                     letter.classList.remove('out');
                     letter.classList.remove('full-screen');
+                    const content = letter.querySelector('.letter-content');
+                    if (content) content.textContent = "";
 
                     // Move back to envelope
                     const envelope = document.querySelector('.envelope');
@@ -302,6 +309,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 isExploding = false;
             }
         });
+    }
+
+    function typeText(text, element, speed = 100) {
+        if (!element) return;
+        element.textContent = "";
+        let i = 0;
+        function type() {
+            if (i < text.length) {
+                element.textContent += text.charAt(i);
+                i++;
+                setTimeout(type, speed);
+            }
+        }
+        type();
     }
 
     init();
