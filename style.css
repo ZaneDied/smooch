@@ -115,7 +115,7 @@ body {
 .envelope-back {
     width: 100%;
     height: 100%;
-    background: #ffffff;
+    background: #ffc9d9;
     border-radius: 8px;
     position: absolute;
     box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
@@ -127,7 +127,7 @@ body {
     height: 0;
     border-left: 150px solid transparent;
     border-right: 150px solid transparent;
-    border-top: 105px solid #ffffff;
+    border-top: 105px solid #ffaac4;
     position: absolute;
     top: 0;
     left: 0;
@@ -151,14 +151,14 @@ body {
 }
 
 .envelope-front-left {
-    border-left: 150px solid #f5f5f5;
+    border-left: 150px solid #ffe0e9;
     border-top: 105px solid transparent;
     border-bottom: 105px solid transparent;
     left: 0;
 }
 
 .envelope-front-right {
-    border-right: 150px solid #f5f5f5;
+    border-right: 150px solid #ffe0e9;
     border-top: 105px solid transparent;
     border-bottom: 105px solid transparent;
     right: 0;
