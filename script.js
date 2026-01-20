@@ -177,16 +177,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (u.isTargeted) {
                     u.el.classList.add('purple');
                     u.startTime = Date.now();
-                    u.pullDelay = Math.random() * 300;
+                    u.pullDelay = Math.random() * 150; // Faster start
 
                     const dx = u.x - centerX;
                     const dy = u.y - centerY;
                     u.orbitRadius = Math.sqrt(dx * dx + dy * dy);
                     u.orbitAngle = Math.atan2(dy, dx);
 
-                    u.orbitSpeed = -(0.05 + Math.random() * 0.1);
-                    u.collapseSpeed = 0.03 + Math.random() * 0.05;
-                    u.accel = 1.02 + Math.random() * 0.03;
+                    // Faster rotation and collapse
+                    u.orbitSpeed = -(0.15 + Math.random() * 0.2);
+                    u.collapseSpeed = 0.06 + Math.random() * 0.08;
+                    u.accel = 1.05 + Math.random() * 0.05;
                 }
             });
         }
