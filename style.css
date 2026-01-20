@@ -164,6 +164,44 @@ body {
     right: 0;
 }
 
+/* Ribbon Stamp */
+.ribbon-stamp {
+    position: absolute;
+    width: 80px;
+    height: 30px;
+    background: linear-gradient(135deg, #ff1744 0%, #d01e3d 100%);
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 4;
+    box-shadow:
+        0 4px 12px rgba(255, 23, 68, 0.4),
+        0 0 0 2px rgba(255, 255, 255, 0.2) inset;
+}
+
+/* Ribbon folds on the sides */
+.ribbon-stamp::before,
+.ribbon-stamp::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+}
+
+.ribbon-stamp::before {
+    left: -12px;
+    border-width: 15px 12px 15px 0;
+    border-color: transparent #c2185b transparent transparent;
+}
+
+.ribbon-stamp::after {
+    right: -12px;
+    border-width: 15px 0 15px 12px;
+    border-color: transparent transparent transparent #c2185b;
+}
+
 /* Envelope Label/Seal - hidden */
 .envelope-seal {
     display: none;
