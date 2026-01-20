@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Fade out sender label
             const senderLabel = document.querySelector('.sender-label');
-            if (senderLabel) senderLabel.style.opacity = '0';
+            if (senderLabel) senderLabel.classList.add('hidden');
 
             const centerX = window.innerWidth / 2;
             const centerY = window.innerHeight / 2;
