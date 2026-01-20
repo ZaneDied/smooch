@@ -76,14 +76,26 @@ body {
 .love-stream-row {
     white-space: nowrap;
     font-family: 'Outfit', sans-serif;
-    font-weight: 800;
-    color: #333;
-    /* Dark grey text on black background */
-    font-size: 20px;
-    line-height: 1.5;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.05);
+    font-size: 24px;
+    line-height: 1;
     position: absolute;
+    left: 0;
     width: 100%;
-    display: flex;
+    pointer-events: none;
+    user-select: none;
+    animation: scroll-left-to-right linear infinite;
+}
+
+@keyframes scroll-left-to-right {
+    0% {
+        transform: translateX(-50%);
+    }
+
+    100% {
+        transform: translateX(0%);
+    }
 }
 
 /* Floating hearts background */
