@@ -243,6 +243,17 @@ document.addEventListener('DOMContentLoaded', () => {
                         // After letter is out, zoom it in to become the new scene
                         setTimeout(() => {
                             letter.classList.add('full-screen');
+
+                            // Hide everything else for a clean new scene
+                            setTimeout(() => {
+                                if (container) container.style.display = 'none';
+                                const envelopeWrapper = document.querySelector('.envelope-wrapper');
+                                if (envelopeWrapper) {
+                                    // Hide all envelope parts except the letter which is now fixed
+                                    const envelopeParts = envelopeWrapper.querySelectorAll('.envelope-back, .envelope-front-left, .envelope-front-right, .envelope-flap, .ribbon-stamp');
+                                    envelopeParts.forEach(part => part.style.display = 'none');
+                                }
+                            }, 1000); // Wait for zoom to be well underway
                         }, 1500); // Wait for slide animation to finish
                     }
                 }, 1300);
