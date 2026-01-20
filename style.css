@@ -25,6 +25,7 @@ body {
     letter-spacing: 4px;
     opacity: 0;
     animation: fade-in 2s ease forwards, shine 3s linear infinite;
+    transition: opacity 1s ease;
 
     /* Shiny Text Effect */
     background: linear-gradient(to right,
