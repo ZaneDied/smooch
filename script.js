@@ -65,6 +65,16 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isExploding && unit.isTargeted) {
                 unit.x += unit.vx;
                 unit.y += unit.vy;
+
+                // 3D Depth Logic
+                if (unit.vz) {
+                    unit.z += unit.vz * 0.1; // Fly towards camera
+                    unit.scale = unit.z;
+                    // Add blur as it gets very close to "camera"
+                    const blur = Math.max(0, (unit.z - 5) * 2);
+                    unit.el.style.filter = blur > 0 ? `blur(${blur}px)` : 'none';
+                }
+
                 unit.vy += 0.05; // Very light gravity
                 unit.opacity -= 0.005;
                 unit.rotation += unit.vx * 2;
@@ -147,13 +157,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 targetedUnits.forEach(u => {
                     const angle = Math.random() * Math.PI * 2;
-                    const velocity = 5 + Math.random() * 15; // Much faster explosion
+                    const velocity = 5 + Math.random() * 15;
                     u.vx = Math.cos(angle) * velocity;
                     u.vy = Math.sin(angle) * velocity;
+
+                    // 3D "To Camera" Effect
+                    u.vz = 1 + Math.random() * 5; // Velocity towards camera
+                    u.z = 1; // Initial scale/z-depth
+
                     u.opacity = 1;
                     u.el.style.opacity = 1;
                     u.el.style.display = 'inline-block';
-                    u.scale = 0.5 + Math.random() * 1.5;
                 });
             }
         }
