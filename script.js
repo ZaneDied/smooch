@@ -242,19 +242,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         // After letter is out, zoom it in to become the new scene
                         setTimeout(() => {
-                            letter.classList.add('full-screen');
+                            if (letter) {
+                                // Get current position to prevent jumping
+                                const rect = letter.getBoundingClientRect();
+                                letter.style.top = `${rect.top}px`;
+                                letter.style.left = `${rect.left}px`;
+                                letter.style.margin = '0';
 
-                            // Hide everything else for a clean new scene
-                            setTimeout(() => {
-                                if (container) container.style.display = 'none';
-                                const envelopeWrapper = document.querySelector('.envelope-wrapper');
-                                if (envelopeWrapper) {
-                                    // Hide all envelope parts except the letter which is now fixed
-                                    const envelopeParts = envelopeWrapper.querySelectorAll('.envelope-back, .envelope-front-left, .envelope-front-right, .envelope-flap, .ribbon-stamp');
-                                    envelopeParts.forEach(part => part.style.display = 'none');
-                                }
-                            }, 1000); // Wait for zoom to be well underway
-                        }, 1500); // Wait for slide animation to finish
+                                // Move to body to escape transformed parent
+                                document.body.appendChild(letter);
+
+                                // Trigger full-screen in next frame
+                                requestAnimationFrame(() => {
+                                    letter.classList.add('full-screen');
+                                });
+
+                                // Hide everything else for a clean new scene
+                                setTimeout(() => {
+                                    if (container) container.style.display = 'none';
+                                    const envelopeWrapper = document.querySelector('.envelope-wrapper');
+                                    if (envelopeWrapper) envelopeWrapper.style.display = 'none';
+                                    const senderLabel = document.querySelector('.sender-label');
+                                    if (senderLabel) senderLabel.style.display = 'none';
+                                    const triggerText = document.querySelector('.question-trigger');
+                                    if (triggerText) triggerText.style.display = 'none';
+                                }, 1000);
+                            }
+                        }, 1500);
                     }
                 }, 1300);
             } else {
@@ -263,7 +277,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (letter) {
                     letter.classList.remove('out');
                     letter.classList.remove('full-screen');
+
+                    // Move back to envelope
+                    const envelope = document.querySelector('.envelope');
+                    if (envelope && letter.parentElement === document.body) {
+                        envelope.appendChild(letter);
+                        letter.style.top = '10px';
+                        letter.style.left = '10px';
+                    }
                 }
+
+                // Restore visibility
+                if (container) container.style.display = 'block';
+                const envelopeWrapper = document.querySelector('.envelope-wrapper');
+                if (envelopeWrapper) envelopeWrapper.style.display = 'block';
+                const senderLabel = document.querySelector('.sender-label');
+                if (senderLabel) senderLabel.classList.remove('hidden');
+                const triggerText = document.querySelector('.question-trigger');
+                if (triggerText) {
+                    triggerText.style.opacity = '1';
+                    triggerText.style.pointerEvents = 'all';
+                }
+                isBeingPulled = false;
+                isExploding = false;
             }
         });
     }
