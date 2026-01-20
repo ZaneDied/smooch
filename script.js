@@ -7,11 +7,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const avoidanceStrength = 50;
 
     function init() {
+        if (!container) return;
         container.innerHTML = '';
         units.length = 0;
 
-        const rowHeight = 40;
-        const colWidth = 180;
+        const rowHeight = 50; // Increased spacing slightly
+        const colWidth = 200;
         const rows = Math.ceil(window.innerHeight / rowHeight) + 1;
         const cols = Math.ceil(window.innerWidth / colWidth) + 2;
 
@@ -22,12 +23,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 el.textContent = phrase;
                 container.appendChild(el);
 
+                // Stagger the starting positions so they don't look like a grid
+                const randomOffsetX = Math.random() * 50;
+                const randomOffsetY = Math.random() * 10;
+
                 const unit = {
                     el: el,
-                    baseX: c * colWidth,
-                    baseY: r * rowHeight,
-                    speed: 1 + Math.random() * 2,
-                    offset: Math.random() * 1000
+                    baseX: (c * colWidth) - 100 + randomOffsetX,
+                    baseY: (r * rowHeight) + randomOffsetY,
+                    speed: 0.5 + Math.random() * 1.5,
                 };
                 units.push(unit);
             }

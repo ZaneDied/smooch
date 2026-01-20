@@ -90,9 +90,14 @@ body {
 }
 
 .love-unit {
-    display: inline-block;
-    margin-right: 40px;
-    transition: transform 0.2s ease-out;
+    position: absolute;
+    white-space: nowrap;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 24px;
+    pointer-events: none;
+    user-select: none;
     will-change: transform;
 }
 
