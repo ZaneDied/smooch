@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (elapsed > unit.pullDelay) {
                     if (unit.orbitRadius > 5) {
-                        // Galaxy Spiral Logic
+                        // Galaxy Spiral Logic (Debris spinning)
                         unit.orbitAngle += unit.orbitSpeed;
                         const wobble = Math.sin(Date.now() * 0.01 + unit.pullDelay) * 2;
                         unit.orbitRadius *= (1 - unit.collapseSpeed);
@@ -89,18 +89,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         unit.x = centerX + Math.cos(unit.orbitAngle) * (unit.orbitRadius + wobble);
                         unit.y = centerY + Math.sin(unit.orbitAngle) * (unit.orbitRadius + wobble);
 
-                        // Spaghettification (Warping)
-                        const dx = centerX - unit.x;
-                        const dy = centerY - unit.y;
-                        const angleToCenter = Math.atan2(dy, dx);
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-
-                        // Stretch more as it gets closer
-                        unit.stretch = 1 + Math.max(0, (400 - dist) / 40);
-                        unit.scale = Math.max(0.1, 1 - (400 - dist) / 600);
+                        // Rotation for "debris" look
+                        unit.rotation += unit.orbitSpeed * 30;
+                        unit.scale = Math.max(0.1, 1 - (400 - unit.orbitRadius) / 600);
 
                         unit.el.style.opacity = Math.min(1, 0.2 + (1 - unit.orbitRadius / 800));
-                        unit.el.style.transform = `translate(${unit.x}px, ${unit.y}px) rotate(${angleToCenter}rad) scale(${unit.stretch}, ${1 / Math.sqrt(unit.stretch)})`;
+                        unit.el.style.transform = `translate(${unit.x}px, ${unit.y}px) rotate(${unit.rotation}deg) scale(${unit.scale})`;
                     } else {
                         // The "Dense Spot"
                         unit.x = centerX + (Math.random() - 0.5) * 10;
