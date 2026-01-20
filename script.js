@@ -66,13 +66,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 unit.x += unit.vx;
                 unit.y += unit.vy;
 
-                // 3D Depth Logic
+                // 3D Depth Logic (Asteroid Shower Feel)
                 if (unit.vz) {
-                    unit.z += unit.vz * 0.1;
-                    unit.scale = Math.min(unit.z, 20); // Cap scale to prevent screen takeover
+                    unit.z += unit.vz * 0.08; // Slightly slower zoom for more travel time
+                    unit.scale = Math.min(unit.z, 15);
 
-                    // Fade out faster as it hits the "camera"
-                    if (unit.z > 10) unit.opacity -= 0.02;
+                    // Fade out as it gets very close to camera
+                    if (unit.z > 8) {
+                        unit.opacity -= 0.03;
+                    }
                 }
 
                 unit.vy += 0.05; // Very light gravity
@@ -161,10 +163,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     u.vx = Math.cos(angle) * velocity;
                     u.vy = Math.sin(angle) * velocity;
 
-                    // 3D "To Camera" Effect - Only for 1/3 of the units
-                    if (Math.random() < 0.33) {
-                        u.vz = 1 + Math.random() * 3; // Slightly slower camera velocity
-                        u.z = 1;
+                    // 3D "To Camera" Effect - Spacious Asteroid Shower Feel
+                    if (Math.random() < 0.15) { // Only 15% go to camera
+                        u.vz = 0.5 + Math.random() * 4; // Wider range of speeds
+                        u.z = 0.1; // Start smaller for more "travel" distance
                     } else {
                         u.vz = 0;
                         u.scale = 0.5 + Math.random() * 1.5;
