@@ -100,8 +100,8 @@ body {
 }
 
 .envelope {
-    width: 250px;
-    height: 175px;
+    width: 200px;
+    height: 140px;
     position: relative;
     cursor: pointer;
     transition: transform 0.3s ease;
@@ -126,9 +126,9 @@ body {
 .envelope-flap {
     width: 0;
     height: 0;
-    border-left: 125px solid transparent;
-    border-right: 125px solid transparent;
-    border-top: 87.5px solid #ffaac4;
+    border-left: 100px solid transparent;
+    border-right: 100px solid transparent;
+    border-top: 70px solid #ffaac4;
     position: absolute;
     top: 0;
     left: 0;
@@ -153,17 +153,17 @@ body {
 }
 
 .envelope-front-left {
-    border-left: 125px solid #ffe0e9;
-    border-top: 87.5px solid transparent;
-    border-bottom: 87.5px solid transparent;
+    border-left: 100px solid #ffe0e9;
+    border-top: 70px solid transparent;
+    border-bottom: 70px solid transparent;
     left: 0;
     filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.25));
 }
 
 .envelope-front-right {
-    border-right: 125px solid #ffe0e9;
-    border-top: 87.5px solid transparent;
-    border-bottom: 87.5px solid transparent;
+    border-right: 100px solid #ffe0e9;
+    border-top: 70px solid transparent;
+    border-bottom: 70px solid transparent;
     right: 0;
     filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.25));
 }
@@ -171,11 +171,11 @@ body {
 /* Wax Seal Stamp */
 .ribbon-stamp {
     position: absolute;
-    width: 55px;
-    height: 55px;
+    width: 45px;
+    height: 45px;
     background: radial-gradient(circle at 30% 30%, #ff9aad, #ff6b88);
     border-radius: 50%;
-    top: 62px;
+    top: 48px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 4;
@@ -207,7 +207,7 @@ body {
 .ribbon-stamp::after {
     content: '♥';
     position: absolute;
-    font-size: 20px;
+    font-size: 16px;
     color: rgba(255, 82, 140, 0.6);
     text-shadow:
         0 1px 0 rgba(255, 255, 255, 0.5),
