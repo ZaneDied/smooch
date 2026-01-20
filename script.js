@@ -67,18 +67,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (elapsed > unit.pullDelay) {
                     if (unit.orbitRadius > 2) {
                         // Galaxy Spiral Logic
-                        // 1. Rotate
+                        // 1. Rotate (Anti-clockwise)
                         unit.orbitAngle += unit.orbitSpeed;
 
-                        // 2. Shrink radius (collapse)
+                        // 2. Shrink radius (collapse) with a bit of organic "wobble"
+                        const wobble = Math.sin(Date.now() * 0.01 + unit.pullDelay) * 0.5;
                         unit.orbitRadius *= (1 - unit.collapseSpeed);
 
-                        // 3. Speed up rotation as it gets closer (conservation of angular momentum feel)
-                        unit.orbitSpeed *= 1.01;
+                        // 3. Speed up rotation uniquely for each unit
+                        unit.orbitSpeed *= unit.accel;
 
                         // 4. Update position
-                        unit.x = centerX + Math.cos(unit.orbitAngle) * unit.orbitRadius;
-                        unit.y = centerY + Math.sin(unit.orbitAngle) * unit.orbitRadius;
+                        unit.x = centerX + Math.cos(unit.orbitAngle) * (unit.orbitRadius + wobble);
+                        unit.y = centerY + Math.sin(unit.orbitAngle) * (unit.orbitRadius + wobble);
                     } else {
                         // Collapse into the dense spot
                         unit.x = centerX;
@@ -152,18 +153,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (u.isTargeted) {
                     u.el.classList.add('purple');
                     u.startTime = Date.now();
-                    u.pullDelay = Math.random() * 300;
+                    u.pullDelay = Math.random() * 400; // More spread out
 
                     // Galaxy/Orbital properties
                     const dx = u.x - centerX;
                     const dy = u.y - centerY;
                     u.orbitRadius = Math.sqrt(dx * dx + dy * dy);
                     u.orbitAngle = Math.atan2(dy, dx);
-                    u.orbitSpeed = (0.05 + Math.random() * 0.1) * (Math.random() > 0.5 ? 1 : -1);
-                    u.collapseSpeed = 0.02 + Math.random() * 0.03;
+
+                    // ANTI-CLOCKWISE: Negative speed
+                    // More randomness in base speed
+                    u.orbitSpeed = -(0.03 + Math.random() * 0.15);
+
+                    // More randomness in collapse speed
+                    u.collapseSpeed = 0.01 + Math.random() * 0.04;
+
+                    // Unique acceleration for each unit to break synchronicity
+                    u.accel = 1.005 + Math.random() * 0.02;
                 }
             });
-            console.log('Galaxy pull initiated! 🌌💜');
+            console.log('Organic Anti-Clockwise Galaxy initiated! 🌌💜');
         }
     });
 
