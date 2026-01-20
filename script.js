@@ -8,20 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let isBeingPulled = false;
     let isExploding = false;
-    let explosionTime = 0;
-
-    // Create Black Hole element
-    const blackHole = document.createElement('div');
-    blackHole.className = 'black-hole';
-    document.body.appendChild(blackHole);
 
     const trigger = document.querySelector('.question-trigger');
-    const responseContainer = document.getElementById('response-buttons');
-    const yesBtn = document.querySelector('.yes-btn');
-    const noBtn = document.querySelector('.no-btn');
-
-    let noBtnX = 0;
-    let noBtnY = 0;
 
     function init() {
         if (!container) return;
@@ -64,31 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
 
-        // Update black hole position
-        blackHole.style.left = `${centerX}px`;
-        blackHole.style.top = `${centerY}px`;
-
-        // No Button Evasion
-        const noRect = noBtn.getBoundingClientRect();
-        const noCenterX = noRect.left + noRect.width / 2;
-        const noCenterY = noRect.top + noRect.height / 2;
-        const distToNo = Math.sqrt(Math.pow(mouse.x - noCenterX, 2) + Math.pow(mouse.y - noCenterY, 2));
-
-        if (distToNo < 100) {
-            const angle = Math.atan2(noCenterY - mouse.y, noCenterX - mouse.x);
-            noBtnX += Math.cos(angle) * 15;
-            noBtnY += Math.sin(angle) * 15;
-
-            // Keep in bounds
-            const padding = 50;
-            if (noRect.left + noBtnX < padding) noBtnX += 20;
-            if (noRect.right + noBtnX > window.innerWidth - padding) noBtnX -= 20;
-            if (noRect.top + noBtnY < padding) noBtnY += 20;
-            if (noRect.bottom + noBtnY > window.innerHeight - padding) noBtnY -= 20;
-
-            noBtn.style.transform = `translate(${noBtnX}px, ${noBtnY}px)`;
-        }
-
         units.forEach(unit => {
             if (isExploding && unit.isTargeted) {
                 unit.x += unit.vx;
@@ -96,16 +59,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // 3D Depth Logic (Asteroid Shower Feel)
                 if (unit.vz) {
-                    unit.z += unit.vz * 0.08; // Slightly slower zoom for more travel time
+                    unit.z += unit.vz * 0.08;
                     unit.scale = Math.min(unit.z, 15);
 
-                    // Fade out as it gets very close to camera
                     if (unit.z > 8) {
                         unit.opacity -= 0.03;
                     }
                 }
 
-                unit.vy += 0.05; // Very light gravity
+                unit.vy += 0.05;
                 unit.opacity -= 0.005;
                 unit.rotation += unit.vx * 2;
                 unit.el.style.opacity = unit.opacity;
@@ -120,7 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (elapsed > unit.pullDelay) {
                     if (unit.orbitRadius > 5) {
-                        // Galaxy Spiral Logic (Debris spinning)
                         unit.orbitAngle += unit.orbitSpeed;
                         const wobble = Math.sin(Date.now() * 0.01 + unit.pullDelay) * 2;
                         unit.orbitRadius *= (1 - unit.collapseSpeed);
@@ -129,18 +90,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         unit.x = centerX + Math.cos(unit.orbitAngle) * (unit.orbitRadius + wobble);
                         unit.y = centerY + Math.sin(unit.orbitAngle) * (unit.orbitRadius + wobble);
 
-                        // Rotation for "debris" look
                         unit.rotation += unit.orbitSpeed * 30;
                         unit.scale = Math.max(0.1, 1 - (400 - unit.orbitRadius) / 600);
 
                         unit.el.style.opacity = Math.min(1, 0.2 + (1 - unit.orbitRadius / 800));
                         unit.el.style.transform = `translate(${unit.x}px, ${unit.y}px) rotate(${unit.rotation}deg) scale(${unit.scale})`;
                     } else {
-                        // The "Dense Spot"
                         unit.x = centerX + (Math.random() - 0.5) * 10;
                         unit.y = centerY + (Math.random() - 0.5) * 10;
                         unit.isAtCenter = true;
-                        unit.el.style.opacity = 0; // Hide at center before explosion
+                        unit.el.style.opacity = 0;
                     }
                 } else {
                     normalFlow(unit);
@@ -176,19 +135,12 @@ document.addEventListener('DOMContentLoaded', () => {
             unit.scale = 1;
         }
 
-        // Check if targeted units are pulled in to trigger explosion
         if (isBeingPulled && !isExploding) {
             const targetedUnits = units.filter(u => u.isTargeted);
             const allAtCenter = targetedUnits.every(u => u.isAtCenter);
 
             if (allAtCenter && targetedUnits.length > 0) {
                 isExploding = true;
-                blackHole.style.opacity = '0'; // Hide black hole on explosion
-
-                // Show buttons after a short delay
-                setTimeout(() => {
-                    responseContainer.classList.add('visible');
-                }, 1000);
 
                 targetedUnits.forEach(u => {
                     const angle = Math.random() * Math.PI * 2;
@@ -196,10 +148,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     u.vx = Math.cos(angle) * velocity;
                     u.vy = Math.sin(angle) * velocity;
 
-                    // 3D "To Camera" Effect - Spacious Asteroid Shower Feel
-                    if (Math.random() < 0.15) { // Only 15% go to camera
-                        u.vz = 0.5 + Math.random() * 4; // Wider range of speeds
-                        u.z = 0.1; // Start smaller for more "travel" distance
+                    if (Math.random() < 0.15) {
+                        u.vz = 0.5 + Math.random() * 4;
+                        u.z = 0.1;
                     } else {
                         u.vz = 0;
                         u.scale = 0.5 + Math.random() * 1.5;
@@ -218,7 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
     trigger.addEventListener('click', () => {
         if (!isBeingPulled) {
             isBeingPulled = true;
-            blackHole.classList.add('active');
             trigger.style.opacity = '0';
             trigger.style.pointerEvents = 'none';
 
@@ -245,17 +195,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         }
-    });
-
-    yesBtn.addEventListener('click', () => {
-        responseContainer.innerHTML = '<h1 style="color: white; font-size: 60px; text-shadow: 0 0 20px #ff00ff;">YAY! I LOVE YOU TOO! ❤️</h1>';
-        // Trigger massive explosion of all units
-        units.forEach(u => {
-            u.isTargeted = true;
-            u.isAtCenter = true;
-        });
-        isBeingPulled = true;
-        isExploding = false; // Reset to trigger new explosion
     });
 
     window.addEventListener('mousemove', (e) => {
