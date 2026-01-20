@@ -168,42 +168,51 @@ body {
     filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.25));
 }
 
-/* Ribbon Stamp */
+/* Wax Seal Stamp */
 .ribbon-stamp {
     position: absolute;
-    width: 80px;
-    height: 30px;
-    background: linear-gradient(135deg, #ff1744 0%, #d01e3d 100%);
-    top: 60px;
+    width: 55px;
+    height: 55px;
+    background: radial-gradient(circle at 30% 30%, #e63946, #a4161a);
+    border-radius: 50%;
+    top: 62px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 4;
     box-shadow:
-        0 4px 12px rgba(255, 23, 68, 0.4),
-        0 0 0 2px rgba(255, 255, 255, 0.2) inset;
+        0 4px 15px rgba(164, 22, 26, 0.6),
+        inset 0 -2px 8px rgba(0, 0, 0, 0.4),
+        inset 0 2px 5px rgba(255, 255, 255, 0.2);
+    border: 3px solid #8b0000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
 }
 
-/* Ribbon folds on the sides */
-.ribbon-stamp::before,
-.ribbon-stamp::after {
+/* Wax drips around seal */
+.ribbon-stamp::before {
     content: '';
     position: absolute;
-    top: 0;
-    width: 0;
-    height: 0;
-    border-style: solid;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: transparent;
+    box-shadow:
+        0 0 0 3px rgba(164, 22, 26, 0.3),
+        0 0 0 6px rgba(164, 22, 26, 0.15);
 }
 
-.ribbon-stamp::before {
-    left: -12px;
-    border-width: 15px 12px 15px 0;
-    border-color: transparent #c2185b transparent transparent;
-}
-
+/* Embossed pattern in center */
 .ribbon-stamp::after {
-    right: -12px;
-    border-width: 15px 0 15px 12px;
-    border-color: transparent transparent transparent #c2185b;
+    content: '♥';
+    position: absolute;
+    font-size: 20px;
+    color: rgba(139, 0, 0, 0.5);
+    text-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.3),
+        0 -1px 0 rgba(0, 0, 0, 0.5);
+    font-weight: bold;
 }
 
 /* Envelope Label/Seal - hidden */
