@@ -23,15 +23,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 el.textContent = phrase;
                 container.appendChild(el);
 
-                // Stagger the starting positions so they don't look like a grid
-                const randomOffsetX = Math.random() * 50;
-                const randomOffsetY = Math.random() * 10;
 
                 const unit = {
                     el: el,
-                    baseX: (c * colWidth) - 100 + randomOffsetX,
-                    baseY: (r * rowHeight) + randomOffsetY,
-                    speed: 0.5 + Math.random() * 1.5,
+                    baseX: (c * colWidth) - 100,
+                    baseY: (r * rowHeight),
+                    speed: 1, // Uniform speed for organization
                 };
                 units.push(unit);
             }
