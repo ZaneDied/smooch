@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
         container.innerHTML = '';
         units.length = 0;
 
-        const rowHeight = 18; // Denser rows
-        const colWidth = 70;  // Denser columns
+        const rowHeight = 30; // Reverted to more reasonable density
+        const colWidth = 120;
         const rows = Math.ceil(window.innerHeight / rowHeight) + 1;
         const cols = Math.ceil(window.innerWidth / colWidth) + 2;
 
@@ -34,10 +34,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     baseY: (r * rowHeight),
                     x: (c * colWidth) - 50,
                     y: (r * rowHeight),
-                    speed: 0.2 + Math.random() * 0.5, // Slower base flow for density
+                    speed: 0.4 + Math.random() * 0.8,
                     vx: 0,
                     vy: 0,
-                    opacity: 1
+                    opacity: 1,
+                    scale: 1
                 };
                 units.push(unit);
             }
@@ -65,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const elapsed = Date.now() - unit.startTime;
 
                 if (elapsed > unit.pullDelay) {
-                    if (unit.orbitRadius > 2) {
+                    if (unit.orbitRadius > 10) {
                         // Galaxy Spiral Logic
                         // 1. Rotate (Anti-clockwise)
                         unit.orbitAngle += unit.orbitSpeed;
@@ -82,11 +83,22 @@ document.addEventListener('DOMContentLoaded', () => {
                         // 4. Update position
                         unit.x = centerX + Math.cos(unit.orbitAngle) * (unit.orbitRadius + wobble);
                         unit.y = centerY + Math.sin(unit.orbitAngle) * (unit.orbitRadius + wobble);
+
+                        // Get brighter as it approaches
+                        unit.opacity = Math.min(1, 0.2 + (1 - unit.orbitRadius / 500));
+                        unit.el.style.opacity = unit.opacity;
                     } else {
-                        // Collapse into the dense spot
-                        unit.x = centerX;
-                        unit.y = centerY;
+                        // The "Dense Spot" (Sun Core)
+                        // Jitter around the center to look like a boiling sun
+                        unit.x = centerX + (Math.random() - 0.5) * 15;
+                        unit.y = centerY + (Math.random() - 0.5) * 15;
                         unit.isAtCenter = true;
+
+                        // Make the core units very bright and slightly larger
+                        unit.el.style.opacity = 1;
+                        unit.el.style.color = '#ff00ff'; // Brighter purple/magenta
+                        unit.el.style.textShadow = '0 0 10px #ff00ff';
+                        unit.scale = 1.2;
                     }
                 } else {
                     normalFlow(unit);
@@ -95,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 normalFlow(unit);
             }
 
-            unit.el.style.transform = `translate(${unit.x}px, ${unit.y}px)`;
+            unit.el.style.transform = `translate(${unit.x}px, ${unit.y}px) scale(${unit.scale || 1})`;
         });
 
         function normalFlow(unit) {
