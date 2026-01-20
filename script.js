@@ -50,72 +50,87 @@ document.addEventListener('DOMContentLoaded', () => {
         const centerY = envRect.top + envRect.height / 2;
 
         units.forEach(unit => {
-            if (isExploding) {
+            if (isExploding && unit.isTargeted) {
                 // Explosion phase: move outward
                 unit.x += unit.vx;
                 unit.y += unit.vy;
-                unit.vy += 0.1; // slight gravity
-                unit.opacity -= 0.01;
+                unit.vy += 0.15; // gravity
+                unit.opacity -= 0.015;
                 unit.el.style.opacity = unit.opacity;
 
                 if (unit.opacity <= 0) {
                     unit.el.style.display = 'none';
                 }
-            } else if (isBeingPulled) {
-                // Pulling phase: move towards envelope center
-                const dx = centerX - unit.x;
-                const dy = centerY - unit.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
+            } else if (isBeingPulled && unit.isTargeted) {
+                const elapsed = Date.now() - unit.startTime;
 
-                if (dist > 5) {
-                    unit.x += dx * 0.1;
-                    unit.y += dy * 0.1;
-                } else {
-                    // When close enough, prepare for explosion
-                    if (!isExploding && Math.random() > 0.99) {
-                        // This will be triggered by the first few units that arrive
+                if (elapsed > unit.pullDelay) {
+                    // Pulling phase: move towards envelope center with a spiral
+                    const dx = centerX - unit.x;
+                    const dy = centerY - unit.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist > 10) {
+                        // Dynamic pull: acceleration + slight spiral
+                        const angle = Math.atan2(dy, dx);
+                        const spiral = 0.5; // Strength of the spiral
+
+                        // Move closer
+                        unit.x += Math.cos(angle) * (dist * 0.15);
+                        unit.y += Math.sin(angle) * (dist * 0.15);
+
+                        // Add spiral motion
+                        unit.x += Math.cos(angle + Math.PI / 2) * (dist * spiral * 0.1);
+                        unit.y += Math.sin(angle + Math.PI / 2) * (dist * spiral * 0.1);
+                    } else {
+                        unit.x = centerX;
+                        unit.y = centerY;
+                        unit.isAtCenter = true;
                     }
+                } else {
+                    // Still in normal flow until delay is over
+                    normalFlow(unit);
                 }
             } else {
-                // Normal phase: flow + avoidance
-                unit.baseX += unit.speed;
-                if (unit.baseX > window.innerWidth + 50) {
-                    unit.baseX = -100;
-                }
-
-                const dx = unit.baseX + 30 - mouse.x;
-                const dy = unit.baseY - mouse.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-
-                let tx = 0;
-                let ty = 0;
-
-                if (dist < avoidanceRadius) {
-                    const force = Math.pow((avoidanceRadius - dist) / avoidanceRadius, 1.5);
-                    tx = (dx / dist) * force * avoidanceStrength;
-                    ty = (dy / dist) * force * avoidanceStrength;
-                }
-
-                unit.x = unit.baseX + tx;
-                unit.y = unit.baseY + ty;
+                normalFlow(unit);
             }
 
             unit.el.style.transform = `translate(${unit.x}px, ${unit.y}px)`;
         });
 
-        // Check if all units are pulled in to trigger explosion
-        if (isBeingPulled && !isExploding) {
-            const allClose = units.every(u => {
-                const dx = centerX - u.x;
-                const dy = centerY - u.y;
-                return Math.sqrt(dx * dx + dy * dy) < 20;
-            });
+        function normalFlow(unit) {
+            unit.baseX += unit.speed;
+            if (unit.baseX > window.innerWidth + 50) {
+                unit.baseX = -100;
+            }
 
-            if (allClose || Date.now() - explosionTime > 2000) {
+            const dx = unit.baseX + 30 - mouse.x;
+            const dy = unit.baseY - mouse.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            let tx = 0;
+            let ty = 0;
+
+            if (dist < avoidanceRadius) {
+                const force = Math.pow((avoidanceRadius - dist) / avoidanceRadius, 1.5);
+                tx = (dx / dist) * force * avoidanceStrength;
+                ty = (dy / dist) * force * avoidanceStrength;
+            }
+
+            unit.x = unit.baseX + tx;
+            unit.y = unit.baseY + ty;
+        }
+
+        // Check if targeted units are pulled in to trigger explosion
+        if (isBeingPulled && !isExploding) {
+            const targetedUnits = units.filter(u => u.isTargeted);
+            const allAtCenter = targetedUnits.every(u => u.isAtCenter || (Date.now() - explosionTime > 3000));
+
+            if (allAtCenter) {
                 isExploding = true;
-                units.forEach(u => {
+                targetedUnits.forEach(u => {
                     const angle = Math.random() * Math.PI * 2;
-                    const velocity = 5 + Math.random() * 15;
+                    const velocity = 8 + Math.random() * 20; // More explosive
                     u.vx = Math.cos(angle) * velocity;
                     u.vy = Math.sin(angle) * velocity;
                 });
@@ -129,10 +144,20 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!isBeingPulled) {
             isBeingPulled = true;
             explosionTime = Date.now();
+
             units.forEach(u => {
-                u.el.classList.add('purple');
+                // Only target about 50% of the units for the firework
+                u.isTargeted = Math.random() > 0.5;
+
+                if (u.isTargeted) {
+                    // Add a random delay for each unit to make the pull look more organic/dynamic
+                    u.pullDelay = Math.random() * 500;
+                    u.startTime = Date.now();
+
+                    u.el.classList.add('purple');
+                }
             });
-            console.log('Envelope clicked! Pulling love... 💜');
+            console.log('Envelope clicked! Dynamic love pull initiated... 💜');
         }
     });
 
