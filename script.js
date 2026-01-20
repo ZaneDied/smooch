@@ -71,10 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     unit.z += unit.vz * 0.1;
                     unit.scale = Math.min(unit.z, 20); // Cap scale to prevent screen takeover
 
-                    // Add blur as it gets close, but cap it
-                    const blur = Math.min(Math.max(0, (unit.z - 5) * 2), 10);
-                    unit.el.style.filter = blur > 0 ? `blur(${blur}px)` : 'none';
-
                     // Fade out faster as it hits the "camera"
                     if (unit.z > 10) unit.opacity -= 0.02;
                 }
