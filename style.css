@@ -298,6 +298,8 @@ body {
     z-index: 10;
     transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     pointer-events: none;
+    perspective: 1000px;
+    /* Add perspective for 3D rotation */
 }
 
 .envelope-wrapper.show {
@@ -312,6 +314,8 @@ body {
     position: relative;
     cursor: pointer;
     transition: transform 0.3s ease;
+    transform-style: preserve-3d;
+    /* Ensure children can move in 3D */
 }
 
 .envelope:hover {
@@ -331,20 +335,18 @@ body {
 
 /* Envelope Flap */
 .envelope-flap {
-    width: 0;
-    height: 0;
-    border-left: 100px solid transparent;
-    border-right: 100px solid transparent;
-    border-top: 70px solid #ffaac4;
+    width: 200px;
+    height: 70px;
+    background: #ffaac4;
     position: absolute;
     top: 0;
     left: 0;
     transform-origin: top;
     z-index: 3;
-    border-radius: 8px 8px 0 0;
-    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    /* Create triangle with clip-path */
     transition: transform 0.6s ease;
-    filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.3));
+    backface-visibility: visible;
 }
 
 /* Envelope Front Flaps (bottom triangles) */
