@@ -143,15 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (allAtCenter && targetedUnits.length > 0) {
                 isExploding = true;
-                blackHole.classList.add('exploding');
-
-                // Trigger Shockwave
-                const shockwave = document.createElement('div');
-                shockwave.className = 'shockwave animate';
-                shockwave.style.left = `${centerX}px`;
-                shockwave.style.top = `${centerY}px`;
-                document.body.appendChild(shockwave);
-                setTimeout(() => shockwave.remove(), 1000);
+                blackHole.style.opacity = '0'; // Hide black hole on explosion
 
                 targetedUnits.forEach(u => {
                     const angle = Math.random() * Math.PI * 2;
