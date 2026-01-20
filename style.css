@@ -408,6 +408,36 @@ body {
     font-weight: bold;
 }
 
+/* Letter */
+.letter {
+    position: absolute;
+    width: 180px;
+    height: 120px;
+    background: #ffffff;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+    transition: transform 1.5s cubic-bezier(0.19, 1, 0.22, 1), opacity 1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 20px;
+    color: #ff00ff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    opacity: 0;
+    transform: translateY(0);
+}
+
+.letter.out {
+    opacity: 1;
+    transform: translateY(-120px);
+    z-index: 5;
+    /* Bring to front when out */
+}
+
 /* ============================================
    RESPONSIVE DESIGN
    ============================================ */

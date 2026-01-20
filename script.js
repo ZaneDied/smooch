@@ -225,9 +225,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // Envelope Interaction
     const envelope = document.querySelector('.envelope');
     const flap = document.querySelector('.envelope-flap');
+    const letter = document.querySelector('.letter');
+
     if (envelope && flap) {
         envelope.addEventListener('click', () => {
-            flap.style.transform = flap.style.transform === 'rotateX(180deg)' ? 'rotateX(0deg)' : 'rotateX(180deg)';
+            const isOpen = flap.style.transform === 'rotateX(180deg)';
+
+            if (!isOpen) {
+                // Open flap
+                flap.style.transform = 'rotateX(180deg)';
+
+                // Wait 2 seconds then slide out letter
+                setTimeout(() => {
+                    if (letter) letter.classList.add('out');
+                }, 2000);
+            } else {
+                // Close flap and hide letter
+                flap.style.transform = 'rotateX(0deg)';
+                if (letter) letter.classList.remove('out');
+            }
         });
     }
 
