@@ -177,9 +177,12 @@ document.addEventListener('DOMContentLoaded', () => {
             trigger.style.opacity = '0';
             trigger.style.pointerEvents = 'none';
 
-            // Fade out sender label
+            // Fade out sender label and hint
             const senderLabel = document.querySelector('.sender-label');
             if (senderLabel) senderLabel.classList.add('hidden');
+
+            const hint = document.querySelector('.interaction-hint');
+            if (hint) hint.classList.add('hidden');
 
             const centerX = window.innerWidth / 2;
             const centerY = window.innerHeight / 2;
