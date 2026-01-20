@@ -11,12 +11,17 @@ document.addEventListener('DOMContentLoaded', () => {
     let isExploding = false;
     let explosionTime = 0;
 
+    // Create Black Hole element
+    const blackHole = document.createElement('div');
+    blackHole.className = 'black-hole';
+    document.body.appendChild(blackHole);
+
     function init() {
         if (!container) return;
         container.innerHTML = '';
         units.length = 0;
 
-        const rowHeight = 30; // Reverted to more reasonable density
+        const rowHeight = 30;
         const colWidth = 120;
         const rows = Math.ceil(window.innerHeight / rowHeight) + 1;
         const cols = Math.ceil(window.innerWidth / colWidth) + 2;
@@ -38,7 +43,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     vx: 0,
                     vy: 0,
                     opacity: 1,
-                    scale: 1
+                    scale: 1,
+                    rotation: 0,
+                    stretch: 1
                 };
                 units.push(unit);
             }
@@ -46,68 +53,69 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function animate() {
-        // Calculate center once per frame for performance
         const envRect = envelope.getBoundingClientRect();
         const centerX = envRect.left + envRect.width / 2;
         const centerY = envRect.top + envRect.height / 2;
+
+        // Update black hole position
+        blackHole.style.left = `${centerX}px`;
+        blackHole.style.top = `${centerY}px`;
 
         units.forEach(unit => {
             if (isExploding && unit.isTargeted) {
                 unit.x += unit.vx;
                 unit.y += unit.vy;
-                unit.vy += 0.1; // Lighter gravity for slower fall
-                unit.opacity -= 0.008; // Much slower fade
+                unit.vy += 0.05; // Very light gravity
+                unit.opacity -= 0.005;
+                unit.rotation += unit.vx * 2;
                 unit.el.style.opacity = unit.opacity;
 
                 if (unit.opacity <= 0) {
                     unit.el.style.display = 'none';
                 }
+
+                unit.el.style.transform = `translate(${unit.x}px, ${unit.y}px) rotate(${unit.rotation}deg) scale(${unit.scale})`;
             } else if (isBeingPulled && unit.isTargeted) {
                 const elapsed = Date.now() - unit.startTime;
 
                 if (elapsed > unit.pullDelay) {
-                    if (unit.orbitRadius > 10) {
+                    if (unit.orbitRadius > 5) {
                         // Galaxy Spiral Logic
-                        // 1. Rotate (Anti-clockwise)
                         unit.orbitAngle += unit.orbitSpeed;
-
-                        // 2. Shrink radius (collapse) with a bit of organic "wobble"
-                        const wobble = Math.sin(Date.now() * 0.01 + unit.pullDelay) * 0.5;
-                        // Slower collapse speed for "long collapse"
+                        const wobble = Math.sin(Date.now() * 0.01 + unit.pullDelay) * 2;
                         unit.orbitRadius *= (1 - unit.collapseSpeed);
-
-                        // 3. Speed up rotation uniquely for each unit
-                        // Slower acceleration
                         unit.orbitSpeed *= unit.accel;
 
-                        // 4. Update position
                         unit.x = centerX + Math.cos(unit.orbitAngle) * (unit.orbitRadius + wobble);
                         unit.y = centerY + Math.sin(unit.orbitAngle) * (unit.orbitRadius + wobble);
 
-                        // Get brighter as it approaches
-                        unit.opacity = Math.min(1, 0.2 + (1 - unit.orbitRadius / 500));
-                        unit.el.style.opacity = unit.opacity;
-                    } else {
-                        // The "Dense Spot" (Sun Core)
-                        // Jitter around the center to look like a boiling sun
-                        unit.x = centerX + (Math.random() - 0.5) * 15;
-                        unit.y = centerY + (Math.random() - 0.5) * 15;
-                        unit.isAtCenter = true;
+                        // Spaghettification (Warping)
+                        const dx = centerX - unit.x;
+                        const dy = centerY - unit.y;
+                        const angleToCenter = Math.atan2(dy, dx);
+                        const dist = Math.sqrt(dx * dx + dy * dy);
 
-                        // Make the core units very bright and slightly larger
-                        unit.el.style.opacity = 1;
-                        unit.el.style.color = '#ff00ff'; // Brighter purple/magenta
-                        unit.el.style.textShadow = '0 0 10px #ff00ff';
-                        unit.scale = 1.2;
+                        // Stretch more as it gets closer
+                        unit.stretch = 1 + Math.max(0, (400 - dist) / 40);
+                        unit.scale = Math.max(0.1, 1 - (400 - dist) / 600);
+
+                        unit.el.style.opacity = Math.min(1, 0.2 + (1 - unit.orbitRadius / 800));
+                        unit.el.style.transform = `translate(${unit.x}px, ${unit.y}px) rotate(${angleToCenter}rad) scale(${unit.stretch}, ${1 / Math.sqrt(unit.stretch)})`;
+                    } else {
+                        // The "Dense Spot"
+                        unit.x = centerX + (Math.random() - 0.5) * 10;
+                        unit.y = centerY + (Math.random() - 0.5) * 10;
+                        unit.isAtCenter = true;
+                        unit.el.style.opacity = 0; // Hide at center before explosion
                     }
                 } else {
                     normalFlow(unit);
+                    unit.el.style.transform = `translate(${unit.x}px, ${unit.y}px) scale(${unit.scale})`;
                 }
             } else {
                 normalFlow(unit);
+                unit.el.style.transform = `translate(${unit.x}px, ${unit.y}px) scale(${unit.scale})`;
             }
-
-            unit.el.style.transform = `translate(${unit.x}px, ${unit.y}px) scale(${unit.scale || 1})`;
         });
 
         function normalFlow(unit) {
@@ -131,21 +139,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
             unit.x = unit.baseX + tx;
             unit.y = unit.baseY + ty;
+            unit.scale = 1;
         }
 
         // Check if targeted units are pulled in to trigger explosion
         if (isBeingPulled && !isExploding) {
             const targetedUnits = units.filter(u => u.isTargeted);
-            // Strictly wait for ALL targeted units to be at center
             const allAtCenter = targetedUnits.every(u => u.isAtCenter);
 
             if (allAtCenter && targetedUnits.length > 0) {
                 isExploding = true;
+                blackHole.classList.add('exploding');
+
+                // Trigger Shockwave
+                const shockwave = document.createElement('div');
+                shockwave.className = 'shockwave animate';
+                shockwave.style.left = `${centerX}px`;
+                shockwave.style.top = `${centerY}px`;
+                document.body.appendChild(shockwave);
+                setTimeout(() => shockwave.remove(), 1000);
+
                 targetedUnits.forEach(u => {
                     const angle = Math.random() * Math.PI * 2;
-                    const velocity = 2 + Math.random() * 6; // Much slower, graceful explosion
+                    const velocity = 5 + Math.random() * 15; // Much faster explosion
                     u.vx = Math.cos(angle) * velocity;
                     u.vy = Math.sin(angle) * velocity;
+                    u.opacity = 1;
+                    u.el.style.opacity = 1;
+                    u.el.style.display = 'inline-block';
+                    u.scale = 0.5 + Math.random() * 1.5;
                 });
             }
         }
@@ -156,6 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
     envelope.addEventListener('click', () => {
         if (!isBeingPulled) {
             isBeingPulled = true;
+            blackHole.classList.add('active');
             explosionTime = Date.now();
 
             const envRect = envelope.getBoundingClientRect();
@@ -163,25 +186,23 @@ document.addEventListener('DOMContentLoaded', () => {
             const centerY = envRect.top + envRect.height / 2;
 
             units.forEach(u => {
-                u.isTargeted = Math.random() < 0.35;
+                u.isTargeted = Math.random() < 0.4; // More units targeted
 
                 if (u.isTargeted) {
                     u.el.classList.add('purple');
                     u.startTime = Date.now();
-                    u.pullDelay = Math.random() * 300; // Shorter delay for faster start
+                    u.pullDelay = Math.random() * 300;
 
                     const dx = u.x - centerX;
                     const dy = u.y - centerY;
                     u.orbitRadius = Math.sqrt(dx * dx + dy * dy);
                     u.orbitAngle = Math.atan2(dy, dx);
 
-                    // Faster collapse and orbit for "short phase"
-                    u.orbitSpeed = -(0.05 + Math.random() * 0.15);
-                    u.collapseSpeed = 0.03 + Math.random() * 0.05; // Faster collapse
-                    u.accel = 1.02 + Math.random() * 0.03; // Faster acceleration
+                    u.orbitSpeed = -(0.05 + Math.random() * 0.1);
+                    u.collapseSpeed = 0.03 + Math.random() * 0.05;
+                    u.accel = 1.02 + Math.random() * 0.03;
                 }
             });
-            console.log('Fast-Orbit Slow-Explosion Galaxy initiated! 🌌💜');
         }
     });
 
