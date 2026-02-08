@@ -734,7 +734,81 @@ body {
     transition: opacity 0.5s ease;
 }
 
+/* Dim used characters */
 .source-char.used {
     opacity: 0.3;
-    /* Dim used characters */
+}
+
+/* Proposal Styles */
+.proposal-container {
+    margin-top: 50px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 2s ease;
+}
+
+.proposal-container.visible {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.proposal-question {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 40px;
+    text-shadow: 0 0 15px rgba(255, 77, 109, 0.5);
+    background: linear-gradient(to right, #ff4d6d, #ffdae3, #ff4d6d);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shine 5s linear infinite;
+    background-size: 200% auto;
+}
+
+.proposal-buttons {
+    display: flex;
+    gap: 40px;
+}
+
+.proposal-btn {
+    padding: 15px 40px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+.yes-btn {
+    background: #ff4d6d;
+    color: white;
+    box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+}
+
+.no-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffdae3;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.proposal-btn:hover {
+    transform: translateY(-5px) scale(1.05);
+}
+
+.yes-btn:hover {
+    box-shadow: 0 10px 25px rgba(255, 77, 109, 0.6);
+}
+
+.no-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
 }

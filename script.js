@@ -461,7 +461,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     setTimeout(animateNextChar, 50); // Speed of typing/flying sequence
                 }
 
+
+
                 animateNextChar();
+
+                // Show proposal after animation + delay
+                setTimeout(() => {
+                    const proposal = document.querySelector('.proposal-container');
+                    if (proposal) proposal.classList.add('visible');
+
+                    // Auto-scroll to bottom of confession to show buttons
+                    const parent = confessionContent.parentElement;
+                    if (parent) {
+                        parent.scrollTop = parent.scrollHeight;
+                        // Keep scrolling for a bit to ensure visibility during fade in
+                        let scrollInterval = setInterval(() => {
+                            parent.scrollTop = parent.scrollHeight;
+                        }, 100);
+                        setTimeout(() => clearInterval(scrollInterval), 2000);
+                    }
+                }, (destSpans.length * 50) + 2000); // Wait for typing + buffer
 
             }, 1000);
         }
