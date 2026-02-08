@@ -675,3 +675,57 @@ body {
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 }
+
+/* Enchantment Animation Styles */
+.flying-char {
+    position: fixed;
+    color: #ffdae3;
+    font-family: 'Playfair Display', serif;
+    font-weight: bold;
+    pointer-events: none;
+    z-index: 2000;
+    will-change: transform, top, left;
+    transition: top 1s cubic-bezier(0.16, 1, 0.3, 1), left 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dest-char {
+    opacity: 0;
+    display: inline-block;
+    min-width: 4px;
+    /* Ensure spaces have width */
+    transition: opacity 0.3s ease;
+}
+
+.dest-char.revealed {
+    opacity: 1;
+}
+
+.magical-appear {
+    animation: magicalFadeIn 1.5s ease forwards;
+}
+
+@keyframes magicalFadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+        filter: blur(4px);
+        text-shadow: 0 0 10px #fff;
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+        text-shadow: none;
+    }
+}
+
+.source-char {
+    display: inline-block;
+    transition: opacity 0.5s ease;
+}
+
+.source-char.used {
+    opacity: 0.3;
+    /* Dim used characters */
+}

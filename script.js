@@ -313,14 +313,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // Type text function with callback support
+    // Type text function with callback support and character indexing
     function typeText(text, element, speed = 100, callback) {
         if (!element) return;
         element.textContent = "";
         let i = 0;
+
         function type() {
             if (i < text.length) {
-                element.textContent += text.charAt(i);
+                const char = text.charAt(i);
+
+                if (char === '\n') {
+                    element.appendChild(document.createElement('br'));
+                } else {
+                    const span = document.createElement('span');
+                    span.textContent = char;
+                    span.className = 'source-char'; // Mark as source
+                    // Make sure spaces are visible/take up space
+                    if (char === ' ') span.innerHTML = '&nbsp;';
+
+                    element.appendChild(span);
+                }
+
                 i++;
 
                 // Auto-scroll to bottom
@@ -347,11 +361,108 @@ document.addEventListener('DOMContentLoaded', () => {
             letter.classList.add('split-view');
             confessionContainer.classList.add('visible');
 
-            // Wait for split transition
+            // Wait for split transition to finish before starting animation
             setTimeout(() => {
-                // Type Confession (same style)
+                // Prepare Destination
+                confessionContent.innerHTML = '';
                 const msg = (typeof CONFESSION_MESSAGE !== 'undefined') ? CONFESSION_MESSAGE : "Confession placeholder...";
-                typeText(msg, confessionContent, 100);
+                const destSpans = [];
+
+                // Create placeholder spans for destination
+                for (let char of msg) {
+                    if (char === '\n') {
+                        confessionContent.appendChild(document.createElement('br'));
+                    } else {
+                        const span = document.createElement('span');
+                        span.textContent = char;
+                        span.className = 'dest-char';
+                        if (char === ' ') span.innerHTML = '&nbsp;';
+                        confessionContent.appendChild(span);
+                        destSpans.push({ span, char });
+                    }
+                }
+
+                // Get Source Spans (from the typed letter)
+                // We convert to array to easily filter/find
+                const sourceSpans = Array.from(document.querySelectorAll('.letter-content .source-char'))
+                    .map(el => ({ el, char: el.textContent, used: false }));
+
+                // Animation Loop
+                let currentIndex = 0;
+
+                function animateNextChar() {
+                    if (currentIndex >= destSpans.length) return;
+
+                    const targetObj = destSpans[currentIndex];
+                    const targetSpan = targetObj.span;
+                    const targetChar = targetObj.char; // Note: might be nbsp if space, wait check source
+
+                    // Determine the actual character to search for (handle &nbsp;)
+                    const searchChar = (targetChar === '\u00A0') ? ' ' : targetChar;
+
+                    // Skip spaces for flying, just reveal them
+                    if (!searchChar.trim()) {
+                        targetSpan.classList.add('revealed');
+                        currentIndex++;
+                        setTimeout(animateNextChar, 30); // Fast for spaces
+                        return;
+                    }
+
+                    // Find matching available source char (case-insensitive?)
+                    // Let's match exact or lowercase
+                    const availableSource = sourceSpans.find(s => !s.used && s.char.toLowerCase() === searchChar.toLowerCase());
+
+                    if (availableSource) {
+                        // Found! Fly it over
+                        availableSource.used = true;
+
+                        // Create a flying clone
+                        const flyer = document.createElement('span');
+                        flyer.textContent = availableSource.char;
+                        flyer.className = 'flying-char';
+
+                        // Get positions
+                        const sourceRect = availableSource.el.getBoundingClientRect();
+                        const destRect = targetSpan.getBoundingClientRect();
+
+                        // Set initial position
+                        flyer.style.top = `${sourceRect.top}px`;
+                        flyer.style.left = `${sourceRect.left}px`;
+
+                        document.body.appendChild(flyer);
+
+                        // Dim source
+                        availableSource.el.classList.add('used');
+
+                        // Force reflow
+                        flyer.getBoundingClientRect();
+
+                        // Animate to destination
+                        flyer.style.top = `${destRect.top}px`;
+                        flyer.style.left = `${destRect.left}px`;
+
+                        // When done, reveal target and remove flyer
+                        setTimeout(() => {
+                            targetSpan.classList.add('revealed');
+                            flyer.remove();
+                        }, 1000); // Matches transition duration
+
+                    } else {
+                        // Not found! Magical Reveal
+                        targetSpan.classList.add('revealed');
+                        targetSpan.classList.add('magical-appear');
+                        targetSpan.style.color = '#fff'; // Flash white?
+                        setTimeout(() => {
+                            targetSpan.style.color = '';
+                        }, 1500);
+                    }
+
+                    currentIndex++;
+                    setTimeout(animateNextChar, 50); // Speed of typing/flying sequence
+                }
+
+                animateNextChar();
+
             }, 1000);
         }
     }
