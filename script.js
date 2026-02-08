@@ -259,7 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     // Start typing after zoom finishes
                                     setTimeout(() => {
                                         // Use the message from message.js
-                                        typeText(LETTER_MESSAGE, document.querySelector('.letter-content'), 100);
+                                        typeText(LETTER_MESSAGE, document.querySelector('.letter-content'), 50, startConfession);
                                     }, 1500);
                                 });
 
@@ -310,6 +310,113 @@ document.addEventListener('DOMContentLoaded', () => {
                 isExploding = false;
             }
         });
+    }
+
+    // New Function: Transition to Split View and Start Enchantment
+    function startConfession() {
+        const letter = document.querySelector('.letter');
+        const confessionDisplay = document.getElementById('confession-display');
+
+        if (!letter || !confessionDisplay) return;
+
+        // 1. Split View
+        letter.classList.add('split-view');
+        confessionDisplay.classList.add('visible');
+
+        // 2. Prepare Confession Text (Destination)
+        const rawConfession = (typeof CONFESSION_MESSAGE !== 'undefined') ? CONFESSION_MESSAGE : "I Love You";
+        const destSpans = [];
+
+        for (let char of rawConfession) {
+            if (char === '\n') {
+                confessionDisplay.appendChild(document.createElement('br'));
+                continue;
+            }
+
+            const span = document.createElement('span');
+            span.textContent = char;
+            span.className = 'confess-char'; // Opacity 0 initially
+            confessionDisplay.appendChild(span);
+
+            if (char.trim()) {
+                destSpans.push({ span, char });
+            } else {
+                span.classList.add('revealed');
+            }
+        }
+
+        // 3. Gather Source Spans (From the Letter)
+        const letterContent = document.querySelector('.letter-content');
+        const sourceSpans = Array.from(letterContent.querySelectorAll('.letter-char'));
+
+        function findSource(char) {
+            const matches = sourceSpans.filter(s => s.textContent.toLowerCase() === char.toLowerCase());
+            if (matches.length > 0) {
+                return matches[Math.floor(Math.random() * matches.length)];
+            }
+            return null;
+        }
+
+        // 4. Animate Loop
+        let currentIndex = 0;
+
+        function animateNext() {
+            if (currentIndex >= destSpans.length) return;
+
+            const targetObj = destSpans[currentIndex];
+            const targetSpan = targetObj.span;
+            const char = targetObj.char;
+
+            const sourceSpan = findSource(char);
+
+            if (sourceSpan) {
+                // FLY!
+                const flyer = document.createElement('span');
+                flyer.textContent = char;
+                flyer.className = 'flying-char';
+
+                const sRect = sourceSpan.getBoundingClientRect();
+                const dRect = targetSpan.getBoundingClientRect();
+
+                flyer.style.top = `${sRect.top}px`;
+                flyer.style.left = `${sRect.left}px`;
+                flyer.style.fontSize = getComputedStyle(sourceSpan).fontSize;
+
+                document.body.appendChild(flyer);
+
+                setTimeout(() => {
+                    // Move
+                    flyer.style.top = `${dRect.top}px`;
+                    flyer.style.left = `${dRect.left}px`;
+                }, 10);
+
+                // Flash source
+                const originalColor = sourceSpan.style.color;
+                sourceSpan.style.color = '#fff';
+                sourceSpan.style.textShadow = '0 0 10px #fff';
+                setTimeout(() => {
+                    sourceSpan.style.color = originalColor;
+                    sourceSpan.style.textShadow = 'none';
+                }, 300);
+
+                // On arrival
+                setTimeout(() => {
+                    targetSpan.classList.add('revealed');
+                    flyer.remove();
+                }, 1200);
+
+            } else {
+                // No source? Fade in slowly
+                setTimeout(() => {
+                    targetSpan.classList.add('revealed');
+                }, 500);
+            }
+
+            currentIndex++;
+            setTimeout(animateNext, 50);
+        }
+
+        setTimeout(animateNext, 1000);
     }
 
 
