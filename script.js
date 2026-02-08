@@ -312,25 +312,150 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function typeText(text, element, speed = 100) {
+
+    // Enchantment Table Effect Logic
+    function typeText(text, element, speed = 50) {
         if (!element) return;
         element.textContent = "";
-        let i = 0;
-        function type() {
-            if (i < text.length) {
-                element.textContent += text.charAt(i);
-                i++;
 
-                // Auto-scroll to bottom
-                const parent = element.parentElement;
-                if (parent && parent.classList.contains('full-screen')) {
-                    parent.scrollTop = parent.scrollHeight;
-                }
-
-                setTimeout(type, speed);
+        // 1. Prepare Destination
+        // Split text into spans so we have a target for each letter
+        const destSpans = [];
+        for (let char of text) {
+            const span = document.createElement('span');
+            span.textContent = char;
+            span.className = 'dest-char';
+            // Handle newlines
+            if (char === '\n') {
+                element.appendChild(document.createElement('br'));
+            } else {
+                element.appendChild(span);
+                destSpans.push({ span, char });
             }
         }
-        type();
+
+        // 2. Prepare Source (Confession Text)
+        const sourceContainer = document.getElementById('confession-container');
+        if (sourceContainer) {
+            sourceContainer.innerHTML = '';
+            sourceContainer.classList.add('visible');
+
+            // Fill with CONFESSION_MESSAGE until we have enough potential sources
+            // or just display it nicely.
+            // Let's just put the message there repeatedly to fill space
+            const sourceText = CONFESSION_MESSAGE.repeat(3);
+            const sourceSpans = [];
+
+            for (let char of sourceText) {
+                if (char === '\n') {
+                    sourceContainer.appendChild(document.createElement('br'));
+                    continue;
+                }
+                const s = document.createElement('span');
+                s.textContent = char;
+                s.style.opacity = '0.5';
+                s.style.transition = 'opacity 0.2s';
+                sourceContainer.appendChild(s);
+
+                // Only track non-whitespace for flying source candidates
+                if (char.trim()) {
+                    sourceSpans.push({ el: s, char, used: false });
+                }
+            }
+
+            // 3. Animate
+            let currentIndex = 0;
+
+            function animateNextChar() {
+                if (currentIndex >= destSpans.length) {
+                    // Done!
+                    setTimeout(() => {
+                        sourceContainer.classList.remove('visible');
+                    }, 2000);
+                    return;
+                }
+
+                const targetObj = destSpans[currentIndex];
+                const targetSpan = targetObj.span;
+                const targetChar = targetObj.char;
+
+                // Skip spaces/newlines for animation, just reveal them
+                if (!targetChar.trim()) {
+                    targetSpan.classList.add('revealed');
+                    currentIndex++;
+                    setTimeout(animateNextChar, speed / 2); // Faster for spaces
+                    return;
+                }
+
+                // Find a matching character in source that hasn't been used recently?
+                // Or just random matching char?
+                const availableSources = sourceSpans.filter(s => s.char.toLowerCase() === targetChar.toLowerCase());
+                let sourceObj = null;
+
+                if (availableSources.length > 0) {
+                    // Pick a random one or one near the top? Random looks more "magical"
+                    sourceObj = availableSources[Math.floor(Math.random() * availableSources.length)];
+                }
+
+                if (sourceObj) {
+                    // Create Flying Clone
+                    const flyer = document.createElement('span');
+                    flyer.textContent = sourceObj.char;
+                    flyer.className = 'flying-char';
+
+                    // Get positions
+                    const sourceRect = sourceObj.el.getBoundingClientRect();
+                    const destRect = targetSpan.getBoundingClientRect();
+
+                    // Start at source
+                    flyer.style.top = `${sourceRect.top}px`;
+                    flyer.style.left = `${sourceRect.left}px`;
+                    flyer.style.fontSize = '14px'; // Start small like source
+
+                    document.body.appendChild(flyer);
+
+                    // Flash the source char
+                    sourceObj.el.style.color = '#fff';
+                    sourceObj.el.style.textShadow = '0 0 10px #fff';
+                    setTimeout(() => {
+                        sourceObj.el.style.color = '';
+                        sourceObj.el.style.textShadow = '';
+                    }, 300);
+
+                    // Force reflow
+                    flyer.getBoundingClientRect();
+
+                    // Animate to destination
+                    // Use a curve?
+                    // Simple transition for now, maybe add keyframes for curve later if needed
+                    flyer.style.transition = `all 0.8s cubic-bezier(0.19, 1, 0.22, 1)`;
+                    flyer.style.top = `${destRect.top}px`;
+                    flyer.style.left = `${destRect.left}px`;
+                    flyer.style.fontSize = '42px'; // Scale up to dest size (or whatever dest size is)
+
+                    // On complete
+                    setTimeout(() => {
+                        targetSpan.classList.add('revealed');
+                        flyer.remove();
+                        const parent = element.parentElement;
+                        if (parent && parent.classList.contains('full-screen')) {
+                            parent.scrollTop = parent.scrollHeight;
+                        }
+
+                    }, 800);
+
+                } else {
+                    // No source found, just reveal
+                    targetSpan.classList.add('revealed');
+                }
+
+                currentIndex++;
+                setTimeout(animateNextChar, speed);
+            }
+
+            // Start animation loop
+            animateNextChar();
+        }
     }
 
     init();

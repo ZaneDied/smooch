@@ -594,3 +594,57 @@ body {
         touch-action: manipulation;
     }
 }
+
+/* ============================================
+   ENCHANTMENT TABLE EFFECT
+   ============================================ */
+
+#confession-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px; /* Width of the "bookshelf" area */
+    height: 100vh;
+    padding: 20px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    color: rgba(255, 182, 193, 0.4); /* Faint pink */
+    overflow: hidden;
+    z-index: 1001; /* Above the letter background but maybe behind the letter content? */
+    pointer-events: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 5px;
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+
+#confession-container.visible {
+    opacity: 1;
+}
+
+/* The flying character */
+.flying-char {
+    position: fixed;
+    font-family: 'Outfit', sans-serif; /* Or Playfair, match destination? */
+    font-weight: bold;
+    color: #ff4d6d;
+    z-index: 2000;
+    pointer-events: none;
+    will-change: transform, top, left;
+    text-shadow: 0 0 5px rgba(255, 77, 109, 0.8);
+}
+
+/* Destination character placeholder */
+.dest-char {
+    display: inline-block;
+    opacity: 0;
+    min-width: 0.3em; /* Ensure spaces have width */
+    white-space: pre;
+}
+
+.dest-char.revealed {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
