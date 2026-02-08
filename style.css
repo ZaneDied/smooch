@@ -594,3 +594,84 @@ body {
         touch-action: manipulation;
     }
 }
+
+/* ============================================
+   SPLIT VIEW & CONFESSION
+   ============================================ */
+
+.confession-letter {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 50vw;
+    height: 100vh;
+    padding: 80px 40px;
+    background: transparent;
+    /* Or maybe a darker shade? */
+    display: none;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    overflow-y: auto;
+    z-index: 1000;
+    box-sizing: border-box;
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+
+.confession-letter.visible {
+    display: flex;
+    opacity: 1;
+}
+
+.confession-content {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: #ffdae3;
+    /* Slightly different color? */
+    line-height: 1.6;
+    white-space: pre-wrap;
+    width: 100%;
+}
+
+/* Cursor for confession */
+.confession-content::after {
+    content: '|';
+    display: inline-block;
+    margin-left: 5px;
+    animation: blink 1s step-end infinite;
+    font-weight: 300;
+}
+
+/* Responsive Split */
+@media screen and (max-width: 768px) {
+    .confession-letter {
+        width: 100vw;
+        height: 50vh;
+        top: 50vh;
+        right: 0;
+        padding: 20px;
+        font-size: 20px;
+        background: rgba(0, 0, 0, 0.8);
+        /* Darker background for readability */
+    }
+}
+
+/* Modifier class for the main letter when split */
+.letter.split-view {
+    width: 50vw !important;
+    left: 0 !important;
+    transition: width 1s ease, left 1s ease !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@media screen and (max-width: 768px) {
+    .letter.split-view {
+        width: 100vw !important;
+        height: 50vh !important;
+        left: 0 !important;
+        top: 0 !important;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+}

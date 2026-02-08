@@ -259,7 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     // Start typing after zoom finishes
                                     setTimeout(() => {
                                         // Use the message from message.js
-                                        typeText(LETTER_MESSAGE, document.querySelector('.letter-content'), 100);
+                                        typeText(LETTER_MESSAGE, document.querySelector('.letter-content'), 100, startConfessionSequence);
                                     }, 1500);
                                 });
 
@@ -312,7 +312,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function typeText(text, element, speed = 100) {
+
+    // Type text function with callback support
+    function typeText(text, element, speed = 100, callback) {
         if (!element) return;
         element.textContent = "";
         let i = 0;
@@ -323,15 +325,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Auto-scroll to bottom
                 const parent = element.parentElement;
-                if (parent && parent.classList.contains('full-screen')) {
+                if (parent && (parent.classList.contains('full-screen') || parent.classList.contains('confession-letter'))) {
                     parent.scrollTop = parent.scrollHeight;
                 }
 
                 setTimeout(type, speed);
+            } else {
+                if (callback) callback();
             }
         }
         type();
     }
+
+    function startConfessionSequence() {
+        const letter = document.querySelector('.letter');
+        const confessionContainer = document.querySelector('.confession-letter');
+        const confessionContent = document.querySelector('.confession-content');
+
+        if (letter && confessionContainer && confessionContent) {
+            // Split View Animation
+            letter.classList.add('split-view');
+            confessionContainer.classList.add('visible');
+
+            // Wait for split transition
+            setTimeout(() => {
+                // Type Confession (same style)
+                const msg = (typeof CONFESSION_MESSAGE !== 'undefined') ? CONFESSION_MESSAGE : "Confession placeholder...";
+                typeText(msg, confessionContent, 100);
+            }, 1000);
+        }
+    }
+
+    // Update the trigger call to pass callback
+    // We need to find where typeText is called in init/animate logic
+    // Actually it's inside the envelope click handler. Let's find that.
+
 
     init();
     animate();
