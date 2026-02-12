@@ -1011,3 +1011,46 @@ body {
 .no-btn:hover {
     background: rgba(255, 255, 255, 0.2);
 }
+
+/* Music Control Button */
+.music-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 77, 109, 0.3);
+    border-radius: 50%;
+    color: #b33951;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 10000;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+}
+
+.music-btn:hover {
+    background: rgba(255, 77, 109, 0.2);
+    transform: scale(1.1);
+}
+
+.music-btn.playing {
+    animation: rotate 3s linear infinite;
+    background: rgba(255, 77, 109, 0.4);
+    color: #fff;
+    border-color: #ff4d6d;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
