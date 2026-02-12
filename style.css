@@ -896,8 +896,8 @@ body {
 
 .dest-char {
     opacity: 0;
-    display: inline;
-    /* Changed from inline-block */
+    display: inline-block;
+    /* Reverted for animations */
     transition: opacity 0.3s ease;
 }
 
@@ -926,7 +926,8 @@ body {
 }
 
 .source-char {
-    display: inline-block;
+    display: inline;
+    /* Changed from inline-block to allow proper word wrapping */
     transition: opacity 0.5s ease;
 }
 

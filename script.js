@@ -314,10 +314,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // Type text function with callback support and character indexing
+    // Type text function with callback support and character indexing
     function typeText(text, element, speed = 100, callback) {
         if (!element) return;
         element.textContent = "";
         let i = 0;
+        let currentContainer = null;
 
         function type() {
             if (i < text.length) {
@@ -325,14 +327,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (char === '\n') {
                     element.appendChild(document.createElement('br'));
+                    currentContainer = null;
+                } else if (char === ' ') {
+                    const span = document.createElement('span');
+                    span.innerHTML = '&nbsp;';
+                    span.className = 'source-char'; // Keep as source for animation finding
+                    element.appendChild(span);
+                    currentContainer = null;
                 } else {
+                    // It's a character
+                    if (!currentContainer) {
+                        currentContainer = document.createElement('span');
+                        currentContainer.style.display = 'inline-block';
+                        currentContainer.style.whiteSpace = 'nowrap';
+                        element.appendChild(currentContainer);
+                    }
+
                     const span = document.createElement('span');
                     span.textContent = char;
-                    span.className = 'source-char'; // Mark as source
-                    // Make sure spaces are visible/take up space
-                    if (char === ' ') span.innerHTML = '&nbsp;';
-
-                    element.appendChild(span);
+                    span.className = 'source-char';
+                    currentContainer.appendChild(span);
                 }
 
                 i++;
