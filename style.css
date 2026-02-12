@@ -536,8 +536,7 @@ body {
     overflow: hidden;
 }
 
-.f-corner,
-.f-side {
+.f-corner {
     position: absolute;
     color: rgba(179, 57, 81, 0.25);
     font-family: serif;
@@ -552,9 +551,7 @@ body {
 
 /* Show decorations when letter is out or confession visible */
 .letter.out .f-corner,
-.letter.out .f-side,
-.confession-letter.visible .f-corner,
-.confession-letter.visible .f-side {
+.confession-letter.visible .f-corner {
     opacity: 1;
 }
 
@@ -586,23 +583,34 @@ body {
     transform: scale(-1);
 }
 
-/* Sides (Left/Right only now) */
-.f-side.left,
-.f-side.right {
-    position: absolute;
-    top: 50%;
+/* Flex Layout for Body */
+.paper-body {
+    display: flex;
+    align-items: center;
+    /* Vertically center everything in the row */
+    justify-content: center;
+    width: 100%;
+}
+
+/* Static sides for Flex Layout */
+.f-side-static {
+    font-family: serif;
     font-size: 32px;
-    z-index: 10;
+    color: rgba(179, 57, 81, 0.25);
+    padding: 0 10px;
+    flex-shrink: 0;
 }
 
-.f-side.left {
-    left: 10px;
-    transform: translateY(-50%);
+.f-side-static.right {
+    transform: scaleX(-1);
 }
 
-.f-side.right {
-    right: 10px;
-    transform: translateY(-50%) scaleX(-1);
+/* Ensure content takes available space in the middle */
+.letter-content,
+.confession-content-wrapper {
+    flex: 1;
+    min-width: 0;
+    /* Prevent flex overflow */
 }
 
 /* Flowing Center Decorations */
