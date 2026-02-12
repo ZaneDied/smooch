@@ -581,17 +581,35 @@ body {
 
 /* Sides (Left/Right only now) */
 .f-side.left {
-    top: 50%;
     left: 10px;
-    transform: translateY(-50%);
     font-size: 32px;
 }
 
 .f-side.right {
-    top: 50%;
     right: 10px;
-    transform: translateY(-50%) scaleX(-1);
+    transform: scaleX(-1);
     font-size: 32px;
+}
+
+/* Position each decoration at different heights */
+.f-side.s1 {
+    top: 5%;
+}
+
+.f-side.s2 {
+    top: 30%;
+}
+
+.f-side.s3 {
+    top: 50%;
+}
+
+.f-side.s4 {
+    top: 70%;
+}
+
+.f-side.s5 {
+    top: 95%;
 }
 
 /* Flowing Center Decorations */
