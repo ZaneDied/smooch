@@ -425,8 +425,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     const targetSpan = targetObj.span;
                     const targetChar = targetObj.char;
 
+                    // Determine the actual character to search for (handle &nbsp;)
+                    const searchChar = (targetChar === '\u00A0' || targetChar === ' ') ? ' ' : targetChar;
+
                     // Skip spaces for flying, just reveal them
-                    if (targetChar === ' ') {
+                    if (!searchChar.trim()) {
                         targetSpan.classList.add('revealed');
                         currentIndex++;
                         setTimeout(animateNextChar, 20);
