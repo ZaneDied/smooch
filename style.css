@@ -536,52 +536,7 @@ body {
     overflow: hidden;
 }
 
-.f-corner {
-    position: absolute;
-    color: rgba(179, 57, 81, 0.25);
-    font-family: serif;
-    font-size: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    /* Hidden initially until opened/revealed */
-    transition: opacity 1s ease;
-}
-
-/* Show decorations when letter is out or confession visible */
-.letter.out .f-corner,
-.confession-letter.visible .f-corner {
-    opacity: 1;
-}
-
-/* Corners */
-.f-corner {
-    font-size: 32px;
-}
-
-.f-corner.tl {
-    top: 10px;
-    left: 10px;
-}
-
-.f-corner.tr {
-    top: 10px;
-    right: 10px;
-    transform: scaleX(-1);
-}
-
-.f-corner.bl {
-    bottom: 10px;
-    left: 10px;
-    transform: scaleY(-1);
-}
-
-.f-corner.br {
-    bottom: 10px;
-    right: 10px;
-    transform: scale(-1);
-}
+/* Obsolete Absolute Corner Styles Removed */
 
 /* Flex Layout for Body */
 .paper-body {
@@ -613,21 +568,41 @@ body {
     /* Prevent flex overflow */
 }
 
-/* Flowing Center Decorations */
+/* Flowing Center Decorations (Flex Header/Footer) */
 .filigree-center {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
-    text-align: center;
     color: rgba(179, 57, 81, 0.25);
     font-family: serif;
     font-size: 32px;
-    padding: 20px 0;
+    padding: 15px 10px;
+    /* Slight padding for corners */
     flex-shrink: 0;
-    /* Don't shrink in flex container */
     pointer-events: none;
+    box-sizing: border-box;
+    /* Ensure padding doesn't overflow width */
+}
+
+/* Static Corners for Flex Headers */
+.f-corner-static {
+    font-size: 32px;
+    line-height: 1;
+}
+
+.f-center-text {
+    flex: 1;
+    /* Take up remaining space */
+    text-align: center;
 }
 
 .filigree-center.bottom {
     transform: rotate(180deg);
+}
+
+.flip-h {
+    transform: scaleX(-1);
 }
 
 
