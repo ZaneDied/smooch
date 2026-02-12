@@ -589,8 +589,8 @@ body {
 /* Sides (Left/Right only now) */
 .f-side.left,
 .f-side.right {
-    position: sticky;
-    top: 50vh;
+    position: absolute;
+    top: 50%;
     font-size: 32px;
     z-index: 10;
 }
