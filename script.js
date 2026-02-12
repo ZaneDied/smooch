@@ -493,4 +493,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
     init();
     animate();
+
+    // Music Control
+    const music = document.getElementById('bg-music');
+    const musicBtn = document.getElementById('music-control');
+
+    if (music && musicBtn) {
+        music.volume = 0.5; // Set volume to 50%
+
+        musicBtn.addEventListener('click', () => {
+            if (music.paused) {
+                music.play()
+                    .then(() => {
+                        musicBtn.classList.add('playing');
+                        musicBtn.textContent = '♫'; // Music note
+                    })
+                    .catch(error => {
+                        console.log("Audio play failed:", error);
+                    });
+            } else {
+                music.pause();
+                musicBtn.classList.remove('playing');
+                musicBtn.textContent = '♪'; // Eighth note
+            }
+        });
+
+        // Try to auto-play on first interaction
+        document.body.addEventListener('click', function () {
+            if (music.paused && !musicBtn.classList.contains('playing')) {
+                // only if user hasn't explicitly paused it (though difficult to track simply)
+                // Just attempt play if paused
+                // music.play().then(...).catch(...)
+                // Actually, let's keep it manual toggle to be safe, or just silent start
+            }
+        }, { once: true });
+    }
 });
