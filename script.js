@@ -235,6 +235,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Open flap
                 flap.style.transform = 'rotateX(180deg)';
 
+                // Start music with fade-in
+                const music = document.getElementById('bg-music');
+                const musicBtn = document.getElementById('music-control');
+                if (music && musicBtn && music.paused) {
+                    music.play()
+                        .then(() => {
+                            musicBtn.classList.add('playing');
+                            musicBtn.textContent = '♫';
+                            // Trigger fade-in (will be defined in music control section)
+                            if (typeof window.fadeInMusic === 'function') {
+                                window.fadeInMusic();
+                            }
+                        })
+                        .catch(error => {
+                            console.log("Audio play failed:", error);
+                        });
+                }
+
+
                 // Wait 1.3 seconds then slide out letter
                 setTimeout(() => {
                     if (letter) {
