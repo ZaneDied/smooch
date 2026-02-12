@@ -579,31 +579,39 @@ body {
     transform: scale(-1);
 }
 
-/* Sides */
-.f-side.top {
-    top: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 28px;
-    width: 100%;
-    text-align: center;
-}
-
-.f-side.bottom {
-    bottom: 15px;
-    left: 50%;
-    transform: translateX(-50%) rotate(180deg);
-    font-size: 28px;
-    width: 100%;
-    text-align: center;
-}
-
+/* Sides (Left/Right only now) */
 .f-side.left {
     top: 50%;
     left: 10px;
     transform: translateY(-50%);
     font-size: 32px;
 }
+
+.f-side.right {
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%) scaleX(-1);
+    font-size: 32px;
+}
+
+/* Flowing Center Decorations */
+.filigree-center {
+    width: 100%;
+    text-align: center;
+    color: rgba(179, 57, 81, 0.25);
+    font-family: serif;
+    font-size: 32px;
+    padding: 20px 0;
+    flex-shrink: 0;
+    /* Don't shrink in flex container */
+    pointer-events: none;
+}
+
+.filigree-center.bottom {
+    transform: rotate(180deg);
+}
+
+
 
 .f-side.right {
     top: 50%;
