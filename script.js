@@ -368,16 +368,44 @@ document.addEventListener('DOMContentLoaded', () => {
                 const msg = (typeof CONFESSION_MESSAGE !== 'undefined') ? CONFESSION_MESSAGE : "Confession placeholder...";
                 const destSpans = [];
 
-                // Create placeholder spans for destination
-                for (let char of msg) {
+                // Helper to create a word container
+                function createWordContainer() {
+                    const span = document.createElement('span');
+                    span.style.display = 'inline-block';
+                    span.style.whiteSpace = 'nowrap';
+                    return span;
+                }
+
+                let currentWord = createWordContainer();
+                confessionContent.appendChild(currentWord);
+
+                // Create placeholder spans for destination, grouped by words
+                for (let i = 0; i < msg.length; i++) {
+                    const char = msg[i];
+
                     if (char === '\n') {
                         confessionContent.appendChild(document.createElement('br'));
+                        currentWord = createWordContainer(); // Start new word container after newline
+                        confessionContent.appendChild(currentWord);
+                    } else if (char === ' ') {
+                        // Spaces are separate, not inside the "word" block usually, or end a word
+                        // Actually, let's just append a space span directly to content to allow wrapping point
+                        const spaceSpan = document.createElement('span');
+                        spaceSpan.innerHTML = '&nbsp;';
+                        spaceSpan.className = 'dest-char confirmed-space';
+                        confessionContent.appendChild(spaceSpan);
+
+                        // Track space for animation if needed (usually just reveals instantly)
+                        destSpans.push({ span: spaceSpan, char: ' ' });
+
+                        // Start new word container for next chars
+                        currentWord = createWordContainer();
+                        confessionContent.appendChild(currentWord);
                     } else {
                         const span = document.createElement('span');
                         span.textContent = char;
                         span.className = 'dest-char';
-                        if (char === ' ') span.innerHTML = '&nbsp;';
-                        confessionContent.appendChild(span);
+                        currentWord.appendChild(span);
                         destSpans.push({ span, char });
                     }
                 }
@@ -395,16 +423,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     const targetObj = destSpans[currentIndex];
                     const targetSpan = targetObj.span;
-                    const targetChar = targetObj.char; // Note: might be nbsp if space, wait check source
-
-                    // Determine the actual character to search for (handle &nbsp;)
-                    const searchChar = (targetChar === '\u00A0') ? ' ' : targetChar;
+                    const targetChar = targetObj.char;
 
                     // Skip spaces for flying, just reveal them
-                    if (!searchChar.trim()) {
+                    if (targetChar === ' ') {
                         targetSpan.classList.add('revealed');
                         currentIndex++;
-                        setTimeout(animateNextChar, 30); // Fast for spaces
+                        setTimeout(animateNextChar, 20);
                         return;
                     }
 
