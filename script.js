@@ -665,6 +665,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }, stepTime);
         }
 
+        // Expose globally for envelope click handler
+        window.fadeInMusic = fadeIn;
+        window.fadeOutMusic = fadeOut;
+
         musicBtn.addEventListener('click', () => {
             if (music.paused) {
                 music.play()
