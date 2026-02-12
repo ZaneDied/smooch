@@ -826,12 +826,10 @@ body {
     /* Allow wrapping but keep newlines */
     width: 100%;
 
-    word-wrap: break-word;
-    /* Legacy */
-    overflow-wrap: break-word;
-    /* Standard */
-    word-break: keep-all;
-    /* Don't break words */
+    /* Reset strict rules, let the spans handle it */
+    word-break: normal;
+    overflow-wrap: normal;
+    word-wrap: normal;
 }
 
 /* Cursor for confession */
@@ -898,9 +896,8 @@ body {
 
 .dest-char {
     opacity: 0;
-    display: inline-block;
-    min-width: 4px;
-    /* Ensure spaces have width */
+    display: inline;
+    /* Changed from inline-block */
     transition: opacity 0.3s ease;
 }
 
