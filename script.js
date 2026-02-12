@@ -600,12 +600,51 @@ document.addEventListener('DOMContentLoaded', () => {
     init();
     animate();
 
-    // Music Control
+    // Music Control with Fade
     const music = document.getElementById('bg-music');
     const musicBtn = document.getElementById('music-control');
 
     if (music && musicBtn) {
-        music.volume = 0.5; // Set volume to 50%
+        const targetVolume = 0.5; // Target volume
+        const fadeDuration = 1000; // 1 second fade
+        const fadeSteps = 50; // Number of volume steps
+        const stepTime = fadeDuration / fadeSteps;
+
+        let fadeInterval = null;
+
+        // Fade in function
+        function fadeIn() {
+            if (fadeInterval) clearInterval(fadeInterval);
+            music.volume = 0;
+            const volumeStep = targetVolume / fadeSteps;
+
+            fadeInterval = setInterval(() => {
+                if (music.volume < targetVolume - volumeStep) {
+                    music.volume = Math.min(music.volume + volumeStep, targetVolume);
+                } else {
+                    music.volume = targetVolume;
+                    clearInterval(fadeInterval);
+                    fadeInterval = null;
+                }
+            }, stepTime);
+        }
+
+        // Fade out function
+        function fadeOut() {
+            if (fadeInterval) clearInterval(fadeInterval);
+            const volumeStep = music.volume / fadeSteps;
+
+            fadeInterval = setInterval(() => {
+                if (music.volume > volumeStep) {
+                    music.volume = Math.max(music.volume - volumeStep, 0);
+                } else {
+                    music.volume = 0;
+                    music.pause();
+                    clearInterval(fadeInterval);
+                    fadeInterval = null;
+                }
+            }, stepTime);
+        }
 
         musicBtn.addEventListener('click', () => {
             if (music.paused) {
@@ -613,24 +652,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     .then(() => {
                         musicBtn.classList.add('playing');
                         musicBtn.textContent = '♫'; // Music note
+                        fadeIn();
                     })
                     .catch(error => {
                         console.log("Audio play failed:", error);
                     });
             } else {
-                music.pause();
                 musicBtn.classList.remove('playing');
                 musicBtn.textContent = '♪'; // Eighth note
+                fadeOut();
             }
         });
 
         // Try to auto-play on first interaction
         document.body.addEventListener('click', function () {
             if (music.paused && !musicBtn.classList.contains('playing')) {
-                // only if user hasn't explicitly paused it (though difficult to track simply)
-                // Just attempt play if paused
-                // music.play().then(...).catch(...)
-                // Actually, let's keep it manual toggle to be safe, or just silent start
+                // Keep it manual toggle
             }
         }, { once: true });
     }
