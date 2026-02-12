@@ -824,6 +824,12 @@ body {
     line-height: 1.6;
     white-space: pre-wrap;
     width: 100%;
+    word-wrap: break-word;
+    /* Legacy support */
+    overflow-wrap: break-word;
+    /* Modern standard */
+    word-break: normal;
+    /* Prevent chopping words */
 }
 
 /* Cursor for confession */
