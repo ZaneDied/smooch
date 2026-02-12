@@ -822,14 +822,16 @@ body {
     text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5);
     /* "Engraved" text effect */
     line-height: 1.6;
-    white-space: pre-wrap;
+    white-space: pre-line;
+    /* Allow wrapping but keep newlines */
     width: 100%;
+
     word-wrap: break-word;
-    /* Legacy support */
+    /* Legacy */
     overflow-wrap: break-word;
-    /* Modern standard */
-    word-break: normal;
-    /* Prevent chopping words */
+    /* Standard */
+    word-break: keep-all;
+    /* Don't break words */
 }
 
 /* Cursor for confession */
