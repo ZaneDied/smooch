@@ -522,9 +522,73 @@ document.addEventListener('DOMContentLoaded', () => {
                         }, 100);
                         setTimeout(() => clearInterval(scrollInterval), 2000);
                     }
+
+                    // Add Button Listeners
+                    const yesBtn = document.querySelector('.yes-btn');
+                    const noBtn = document.querySelector('.no-btn');
+                    const responsePopup = document.querySelector('.response-popup');
+                    const responseContent = document.querySelector('.response-content');
+
+                    if (yesBtn) {
+                        // Remove old listeners if any to prevent duplicates (though this runs once)
+                        const newYes = yesBtn.cloneNode(true);
+                        yesBtn.parentNode.replaceChild(newYes, yesBtn);
+
+                        newYes.addEventListener('click', () => {
+                            if (responsePopup && responseContent) {
+                                responsePopup.classList.add('visible');
+                                startConfetti();
+                                typeText("look at me and kiss me", responseContent, 100);
+                            }
+                        });
+                    }
+
+                    if (noBtn) {
+                        const newNo = noBtn.cloneNode(true);
+                        noBtn.parentNode.replaceChild(newNo, noBtn);
+
+                        newNo.addEventListener('click', () => {
+                            if (responsePopup && responseContent) {
+                                responsePopup.classList.add('visible');
+                                // No confetti for "No"
+                                typeText("slap me", responseContent, 100);
+                            }
+                        });
+                    }
+
                 }, (destSpans.length * 50) + 2000); // Wait for typing + buffer
 
             }, 1000);
+        }
+    }
+
+    // Confetti Logic
+    function startConfetti() {
+        const colors = ['#ff4d6d', '#ffb3c1', '#c9184a', '#fff0f5', '#ffd700'];
+        const confettiCount = 100;
+
+        for (let i = 0; i < confettiCount; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+
+            // Random properties
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const left = Math.random() * 100;
+            const animDuration = 3 + Math.random() * 3; // 3-6s
+            const animDelay = Math.random() * 2;
+
+            confetti.style.background = color;
+            confetti.style.left = `${left}vw`;
+            confetti.style.top = `-10px`;
+            confetti.style.animationDuration = `${animDuration}s`;
+            confetti.style.animationDelay = `${animDelay}s`;
+
+            document.body.appendChild(confetti);
+
+            // Cleanup
+            setTimeout(() => {
+                confetti.remove();
+            }, (animDuration + animDelay) * 1000);
         }
     }
 
