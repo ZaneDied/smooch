@@ -645,8 +645,18 @@ document.addEventListener('DOMContentLoaded', () => {
         let fadeInterval = null;
         let isPlaying = false; // Track intended music state
 
+        // Detect iOS - volume control doesn't work on iOS Safari
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+            (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
         // Fade in function
         function fadeIn() {
+            if (isIOS) {
+                // iOS doesn't support volume control, just set to target immediately
+                music.volume = targetVolume;
+                return;
+            }
+
             if (fadeInterval) clearInterval(fadeInterval);
             music.volume = 0;
             const volumeStep = targetVolume / fadeSteps;
@@ -664,6 +674,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Fade out function
         function fadeOut() {
+            if (isIOS) {
+                // iOS doesn't support volume control, just pause immediately
+                music.pause();
+                return;
+            }
+
             if (fadeInterval) clearInterval(fadeInterval);
             const volumeStep = music.volume / fadeSteps;
 
