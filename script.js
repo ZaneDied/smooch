@@ -243,7 +243,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         .then(() => {
                             musicBtn.classList.add('playing');
                             musicBtn.textContent = '♫';
-                            // Trigger fade-in (will be defined in music control section)
+                            // Update playing state
+                            if (typeof window.setMusicPlaying === 'function') {
+                                window.setMusicPlaying(true);
+                            }
+                            // Trigger fade-in
                             if (typeof window.fadeInMusic === 'function') {
                                 window.fadeInMusic();
                             }
@@ -630,6 +634,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const stepTime = fadeDuration / fadeSteps;
 
         let fadeInterval = null;
+        let isPlaying = false; // Track intended music state
 
         // Fade in function
         function fadeIn() {
@@ -668,9 +673,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Expose globally for envelope click handler
         window.fadeInMusic = fadeIn;
         window.fadeOutMusic = fadeOut;
+        window.setMusicPlaying = (playing) => { isPlaying = playing; };
 
         musicBtn.addEventListener('click', () => {
-            if (music.paused) {
+            if (!isPlaying) {
+                // Start playing
+                isPlaying = true;
                 music.play()
                     .then(() => {
                         musicBtn.classList.add('playing');
@@ -679,8 +687,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     })
                     .catch(error => {
                         console.log("Audio play failed:", error);
+                        isPlaying = false; // Reset on error
                     });
             } else {
+                // Stop playing
+                isPlaying = false;
                 musicBtn.classList.remove('playing');
                 musicBtn.textContent = '♪'; // Eighth note
                 fadeOut();
