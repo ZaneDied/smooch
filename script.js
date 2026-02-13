@@ -238,15 +238,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Start music with fade-in
                 const music = document.getElementById('bg-music');
                 const musicBtn = document.getElementById('music-control');
-                if (music && musicBtn && music.paused) {
+                // Check both paused state AND our global flag to avoid double-play
+                const shouldStartMusic = music && musicBtn && music.paused &&
+                    (typeof window.getMusicPlaying !== 'function' || !window.getMusicPlaying());
+
+                if (shouldStartMusic) {
+                    // Set state BEFORE starting to avoid race conditions
+                    if (typeof window.setMusicPlaying === 'function') {
+                        window.setMusicPlaying(true);
+                    }
+
                     music.play()
                         .then(() => {
                             musicBtn.classList.add('playing');
                             musicBtn.textContent = '♫';
-                            // Update playing state
-                            if (typeof window.setMusicPlaying === 'function') {
-                                window.setMusicPlaying(true);
-                            }
                             // Trigger fade-in
                             if (typeof window.fadeInMusic === 'function') {
                                 window.fadeInMusic();
@@ -254,6 +259,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         })
                         .catch(error => {
                             console.log("Audio play failed:", error);
+                            // Reset state on error
+                            if (typeof window.setMusicPlaying === 'function') {
+                                window.setMusicPlaying(false);
+                            }
                         });
                 }
 
@@ -674,6 +683,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.fadeInMusic = fadeIn;
         window.fadeOutMusic = fadeOut;
         window.setMusicPlaying = (playing) => { isPlaying = playing; };
+        window.getMusicPlaying = () => isPlaying;
 
         musicBtn.addEventListener('click', () => {
             if (!isPlaying) {
