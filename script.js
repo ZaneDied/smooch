@@ -632,6 +632,17 @@ document.addEventListener('DOMContentLoaded', () => {
     init();
     animate();
 
+    // Set today's date in the response popup
+    const endDateEl = document.getElementById('end-date');
+    if (endDateEl) {
+        const today = new Date();
+        const months = ['January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'];
+        const monthName = months[today.getMonth()];
+        const day = today.getDate();
+        endDateEl.textContent = `Ended: ${monthName} ${day}`;
+    }
+
     // Music Control with Fade
     const music = document.getElementById('bg-music');
     const musicBtn = document.getElementById('music-control');

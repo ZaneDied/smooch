@@ -1092,6 +1092,23 @@ body {
     max-width: 80%;
 }
 
+.response-date {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Playfair Display', serif;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.5s ease 1s;
+}
+
+.response-popup.visible .response-date {
+    opacity: 1;
+}
+
 .confetti {
     position: fixed;
     width: 10px;
