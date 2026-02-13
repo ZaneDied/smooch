@@ -1,4 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Auto-hide Safari toolbar on iOS
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+    if (isIOS) {
+        // Trigger toolbar hide with scroll trick
+        window.scrollTo(0, 1);
+        setTimeout(() => window.scrollTo(0, 0), 100);
+    }
+
     const container = document.getElementById('love-stream-container');
     const phrase = "I LOVE YOU";
     const units = [];
